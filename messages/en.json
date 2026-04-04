@@ -1,0 +1,10 @@
+{
+  "Navigation": {
+    "home": "Home",
+    "about": "About Us",
+    "contact": "Contact Us"
+  },
+  "Hero": {
+    "cta": "Book Consultation"
+  }
+}

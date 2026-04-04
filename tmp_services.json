@@ -1,0 +1,306 @@
+[
+  {
+    "id": "contracts",
+    "name": {
+      "ar": "التعاقدات",
+      "en": "Contracts"
+    },
+    "slug": "contracts",
+    "category": "contracts",
+    "order": 16,
+    "description": {
+      "ar": "",
+      "en": ""
+    },
+    "image": "",
+    "video": "",
+    "icon": "",
+    "isActive": true,
+    "createdAt": "2026-04-03T13:23:50.055Z"
+  },
+  {
+    "id": "corporate-factory",
+    "name": {
+      "ar": "خدمات الشركات والمصانع",
+      "en": "Corporate & Factory Services"
+    },
+    "slug": "corporate-factory",
+    "category": "corporate",
+    "order": 14,
+    "description": {
+      "ar": "",
+      "en": ""
+    },
+    "image": "",
+    "video": "",
+    "icon": "",
+    "isActive": true,
+    "createdAt": "2026-04-03T13:23:48.486Z"
+  },
+  {
+    "id": "deep-cleaning",
+    "name": {
+      "ar": "التنظيف العميق (ديب كلينج)",
+      "en": "Deep Cleaning"
+    },
+    "slug": "deep-cleaning",
+    "category": "cleaning",
+    "order": 2,
+    "description": {
+      "ar": "",
+      "en": ""
+    },
+    "image": "",
+    "video": "",
+    "icon": "",
+    "isActive": true,
+    "createdAt": "2026-04-03T13:23:37.300Z"
+  },
+  {
+    "id": "electrical-plumbing",
+    "name": {
+      "ar": "كهرباء وسباكة ونقاشة ونجارة وأعمال الجبس بورد",
+      "en": "Electrical, Plumbing, Painting, Carpentry & Gypsum Board"
+    },
+    "slug": "electrical-plumbing",
+    "category": "maintenance",
+    "order": 10,
+    "description": {
+      "ar": "",
+      "en": ""
+    },
+    "image": "",
+    "video": "",
+    "icon": "",
+    "isActive": true,
+    "createdAt": "2026-04-03T13:23:44.955Z"
+  },
+  {
+    "id": "facade-cleaning",
+    "name": {
+      "ar": "تنظيف الواجهات",
+      "en": "Facade Cleaning"
+    },
+    "slug": "facade-cleaning",
+    "category": "cleaning",
+    "order": 3,
+    "description": {
+      "ar": "",
+      "en": ""
+    },
+    "image": "",
+    "video": "",
+    "icon": "",
+    "isActive": true,
+    "createdAt": "2026-04-03T13:23:38.409Z"
+  },
+  {
+    "id": "furniture-cleaning",
+    "name": {
+      "ar": "تنظيف المفروشات",
+      "en": "Furniture Cleaning"
+    },
+    "slug": "furniture-cleaning",
+    "category": "cleaning",
+    "order": 4,
+    "description": {
+      "ar": "",
+      "en": ""
+    },
+    "image": "",
+    "video": "",
+    "icon": "",
+    "isActive": true,
+    "createdAt": "2026-04-03T13:23:39.157Z"
+  },
+  {
+    "id": "home-maintenance",
+    "name": {
+      "ar": "صيانة المنازل والشركات",
+      "en": "Home & Office Maintenance"
+    },
+    "slug": "home-maintenance",
+    "category": "maintenance",
+    "order": 9,
+    "description": {
+      "ar": "",
+      "en": ""
+    },
+    "image": "",
+    "video": "",
+    "icon": "",
+    "isActive": true,
+    "createdAt": "2026-04-03T13:23:44.019Z"
+  },
+  {
+    "id": "internal-cleaning",
+    "name": {
+      "ar": "النظافة الداخلية",
+      "en": "Internal Cleaning"
+    },
+    "slug": "internal-cleaning",
+    "category": "cleaning",
+    "order": 1,
+    "description": {
+      "ar": "",
+      "en": ""
+    },
+    "image": "",
+    "video": "",
+    "icon": "",
+    "isActive": true,
+    "createdAt": "2026-04-03T13:23:36.003Z"
+  },
+  {
+    "id": "labor-supply",
+    "name": {
+      "ar": "توريد عمالة",
+      "en": "Labor Supply"
+    },
+    "slug": "labor-supply",
+    "category": "labor",
+    "order": 15,
+    "description": {
+      "ar": "",
+      "en": ""
+    },
+    "image": "",
+    "video": "",
+    "icon": "",
+    "isActive": true,
+    "createdAt": "2026-04-03T13:23:49.249Z"
+  },
+  {
+    "id": "landscaping",
+    "name": {
+      "ar": "خدمة اللاند سكيب - صيانة وتركيب",
+      "en": "Landscaping - Maintenance & Installation"
+    },
+    "slug": "landscaping",
+    "category": "landscaping",
+    "order": 11,
+    "description": {
+      "ar": "",
+      "en": ""
+    },
+    "image": "",
+    "video": "",
+    "icon": "",
+    "isActive": true,
+    "createdAt": "2026-04-03T13:23:45.755Z"
+  },
+  {
+    "id": "pest-control",
+    "name": {
+      "ar": "مكافحة وإبادة الحشرات",
+      "en": "Pest Control & Extermination"
+    },
+    "slug": "pest-control",
+    "category": "pest-control",
+    "order": 7,
+    "description": {
+      "ar": "",
+      "en": ""
+    },
+    "image": "",
+    "video": "",
+    "icon": "",
+    "isActive": true,
+    "createdAt": "2026-04-03T13:23:41.950Z"
+  },
+  {
+    "id": "pool-maintenance",
+    "name": {
+      "ar": "نظافة وتعقيم وصيانة حمامات السباحة",
+      "en": "Pool Cleaning, Sanitization & Maintenance"
+    },
+    "slug": "pool-maintenance",
+    "category": "maintenance",
+    "order": 12,
+    "description": {
+      "ar": "",
+      "en": ""
+    },
+    "image": "",
+    "video": "",
+    "icon": "",
+    "isActive": true,
+    "createdAt": "2026-04-03T13:23:46.527Z"
+  },
+  {
+    "id": "restaurant-hood",
+    "name": {
+      "ar": "خدمات المطاعم - تنظيف الهود",
+      "en": "Restaurant Services - Hood Cleaning"
+    },
+    "slug": "restaurant-hood",
+    "category": "restaurant",
+    "order": 8,
+    "description": {
+      "ar": "",
+      "en": ""
+    },
+    "image": "",
+    "video": "",
+    "icon": "",
+    "isActive": true,
+    "createdAt": "2026-04-03T13:23:42.974Z"
+  },
+  {
+    "id": "restaurant-services",
+    "name": {
+      "ar": "خدمات المطاعم",
+      "en": "Restaurant Services"
+    },
+    "slug": "restaurant-services",
+    "category": "restaurant",
+    "order": 13,
+    "description": {
+      "ar": "",
+      "en": ""
+    },
+    "image": "",
+    "video": "",
+    "icon": "",
+    "isActive": true,
+    "createdAt": "2026-04-03T13:23:47.494Z"
+  },
+  {
+    "id": "sanitization",
+    "name": {
+      "ar": "التعقيم",
+      "en": "Sanitization"
+    },
+    "slug": "sanitization",
+    "category": "sanitization",
+    "order": 6,
+    "description": {
+      "ar": "",
+      "en": ""
+    },
+    "image": "",
+    "video": "",
+    "icon": "",
+    "isActive": true,
+    "createdAt": "2026-04-03T13:23:40.958Z"
+  },
+  {
+    "id": "upholstery-carpet",
+    "name": {
+      "ar": "انتريهات وسجاد وموكيت وستائر ومراتب",
+      "en": "Upholstery, Carpet, Curtains & Mattresses"
+    },
+    "slug": "upholstery-carpet",
+    "category": "cleaning",
+    "order": 5,
+    "description": {
+      "ar": "",
+      "en": ""
+    },
+    "image": "",
+    "video": "",
+    "icon": "",
+    "isActive": true,
+    "createdAt": "2026-04-03T13:23:39.915Z"
+  }
+]
