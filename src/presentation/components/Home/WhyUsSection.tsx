@@ -1,6 +1,5 @@
 import React from 'react';
 import { FiAward, FiShield, FiZap } from 'react-icons/fi';
-
 export default function WhyUsSection({ locale }: { locale: string }) {
   return (
     <section className="py-24 bg-gray-50 dark:bg-slate-900/50" id="why-us-section">

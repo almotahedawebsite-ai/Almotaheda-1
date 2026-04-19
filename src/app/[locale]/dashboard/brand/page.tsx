@@ -7,7 +7,13 @@ import { SiteSettings } from '@/domain/types/settings';
 import { CloudinaryService } from '@/infrastructure/services/CloudinaryService';
 import { TranslatableField } from '@/presentation/components/Dashboard/TranslatableField';
 import { TranslatableString } from '@/domain/types/settings';
-import { FiSave } from 'react-icons/fi';
+import { FiSave, FiImage, FiDroplet, FiCamera, FiLayout } from 'react-icons/fi';
+import DashboardPageTemplate from '@/presentation/components/Dashboard/DashboardPageTemplate';
+import BrandLogoSection from '@/presentation/components/Dashboard/Brand/BrandLogoSection';
+import BrandColorsSection from '@/presentation/components/Dashboard/Brand/BrandColorsSection';
+import BrandMediaSection from '@/presentation/components/Dashboard/Brand/BrandMediaSection';
+import BrandNavbarSection from '@/presentation/components/Dashboard/Brand/BrandNavbarSection';
+import SettingsAccordionGroup from '@/presentation/components/Dashboard/SettingsAccordionGroup';
 
 export default function BrandSettingsPage() {
   const [settings, setSettings] = useState<Partial<SiteSettings>>({});
@@ -22,11 +28,20 @@ export default function BrandSettingsPage() {
     });
   }, []);
 
+  const revalidateCache = async () => {
+    try {
+      await fetch('/api/revalidate-settings', { method: 'POST' });
+    } catch (err) {
+      console.warn('[revalidateCache] فشل تحديث الكاش:', err);
+    }
+  };
+
   const handleSave = async () => {
     setSaving(true);
     try {
       await repo.saveGlobalSettings(settings);
-      alert('تم حفظ الهوية بنجاح!');
+      await revalidateCache();
+      alert('تم حفظ الهوية بنجاح! سيظهر اللوجو في الموقع الآن.');
     } catch (e) {
       alert('حدث خطأ أثناء الحفظ');
     } finally {
@@ -40,112 +55,97 @@ export default function BrandSettingsPage() {
     try {
       const url = await CloudinaryService.uploadImage(file);
       setSettings(s => ({ ...s, logoUrl: url }));
+      // Auto-save the logo URL immediately after upload
+      await repo.saveGlobalSettings({ ...settings, logoUrl: url });
+      await revalidateCache();
+      alert('تم رفع اللوجو وحفظه بنجاح! سيظهر في الموقع الآن.');
     } catch (err) {
       alert('فشل رفع الشعار');
     }
   };
 
+  const uploadMediaImage = async (e: React.ChangeEvent<HTMLInputElement>, key: 'heroImage' | 'aboutImage', successMsg: string) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const url = await CloudinaryService.uploadImage(file);
+      setSettings(s => ({ ...s, [key]: url }));
+      await repo.saveGlobalSettings({ ...settings, [key]: url });
+      await revalidateCache();
+      alert(successMsg);
+    } catch (err) {
+      alert('فشل رفع الصورة');
+    }
+  };
+
+  const removeMediaImage = async (key: 'heroImage' | 'aboutImage', successMsg: string) => {
+    setSettings(s => ({ ...s, [key]: '' }));
+    await repo.saveGlobalSettings({ ...settings, [key]: '' });
+    await revalidateCache();
+    alert(successMsg);
+  };
+
   if (loading) return <div className="p-10">جاري تحميل الإعدادات...</div>;
 
+  const headerActions = (
+    <button 
+      onClick={handleSave} 
+      disabled={saving}
+      className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-blue-200 disabled:opacity-50 flex items-center justify-center gap-2"
+    >
+      {saving ? 'جاري الحفظ...' : <><FiSave /> حفظ الهوية</>}
+    </button>
+  );
+
+  const sections = [
+    {
+      id: 'logo',
+      title: 'الاسم والشعار',
+      icon: <FiImage />,
+      content: (
+        <SettingsAccordionGroup title="إدارة الاسم والشعار" icon={<FiImage />}>
+          <BrandLogoSection settings={settings} setSettings={setSettings} uploadLogo={uploadLogo} />
+        </SettingsAccordionGroup>
+      )
+    },
+    {
+      id: 'colors',
+      title: 'ألوان الموقع (CSS Variables)',
+      icon: <FiDroplet />,
+      content: (
+        <SettingsAccordionGroup title="إدارة ألوان الهوية البصرية" icon={<FiDroplet />}>
+          <BrandColorsSection settings={settings} setSettings={setSettings} />
+        </SettingsAccordionGroup>
+      )
+    },
+    {
+      id: 'media',
+      title: 'صور الموقع (Website Media)',
+      icon: <FiCamera />,
+      content: (
+        <SettingsAccordionGroup title="إدارة الميديا وصور الموقع" icon={<FiCamera />}>
+          <BrandMediaSection settings={settings} setSettings={setSettings} uploadMediaImage={uploadMediaImage} removeMediaImage={removeMediaImage} />
+        </SettingsAccordionGroup>
+      )
+    },
+    {
+      id: 'navbar',
+      title: 'مظهر شريط التنقل (Navbar)',
+      icon: <FiLayout />,
+      content: (
+        <SettingsAccordionGroup title="إعدادات شريط التنقل" icon={<FiLayout />}>
+          <BrandNavbarSection settings={settings} setSettings={setSettings} />
+        </SettingsAccordionGroup>
+      )
+    }
+  ];
+
   return (
-    <div className="max-w-4xl mx-auto space-y-8 animate-fade-in-up">
-      <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-        <div>
-          <h1 className="text-2xl font-black text-gray-900">الهوية البصرية (Brand Identity)</h1>
-          <p className="text-gray-500 mt-1">المكان الذي يُحدد اسم موقعك وشعاره وألوانه التي تنعكس على كل الصفحات.</p>
-        </div>
-        <button 
-          onClick={handleSave} 
-          disabled={saving}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-blue-200 disabled:opacity-50 flex items-center justify-center gap-2"
-        >
-          {saving ? 'جاري الحفظ...' : <><FiSave /> حفظ الهوية</>}
-        </button>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Logo and Name */}
-        <section className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col gap-6">
-          <h2 className="text-xl font-bold border-b pb-2">الاسم والشعار</h2>
-
-          <div className="mb-4">
-            <TranslatableField 
-              label="اسم الموقع (Site Name)"
-              value={settings.siteName}
-              onChange={(val: TranslatableString) => setSettings({...settings, siteName: val})}
-              enableMultiLanguage={!!settings.enableMultiLanguage}
-              placeholder="مثال: شركة العقارات الحديثة"
-            />
-            <p className="text-xs text-gray-400 mt-2">* سيظهر هذا الاسم في الـ Navbar والـ Footer واسم المتصفح.</p>
-          </div>
-
-          <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">لوجو الموقع (Logo)</label>
-            <div className="flex items-center gap-6 border-2 border-dashed border-gray-200 rounded-xl p-6">
-              <div className="w-24 h-24 bg-gray-50 rounded-xl border flex items-center justify-center overflow-hidden shrink-0">
-                {settings.logoUrl ? (
-                  <img src={settings.logoUrl} alt="Logo" className="w-full h-full object-contain" />
-                ) : (
-                  <span className="text-gray-400 text-sm">لا يوجد</span>
-                )}
-              </div>
-              <div className="flex-1">
-                <input type="file" className="text-sm" onChange={uploadLogo} />
-                <p className="text-xs text-gray-400 mt-2">يفضل أن يكون بصيغة PNG وبخلفية شفافة لتتطابق مع الـ Navbar.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Brand Colors */}
-        <section className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col gap-6">
-          <h2 className="text-xl font-bold border-b pb-2">ألوان الموقع (CSS Variables)</h2>
-          
-          <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2 flex justify-between items-center">
-              <span>اللون الرئيسي (Primary Color)</span>
-              <span className="text-xs font-mono text-gray-500">{settings.primaryColor}</span>
-            </label>
-            <div className="flex gap-4 items-center">
-              <input 
-                type="color" 
-                className="w-16 h-16 rounded cursor-pointer border-0 p-0" 
-                value={settings.primaryColor || '#2563eb'}
-                onChange={e => setSettings({...settings, primaryColor: e.target.value})}
-              />
-              <p className="text-sm text-gray-500 flex-1">لون الأزرار والعناصر البارزة الأساسية في الموقع.</p>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2 flex justify-between items-center">
-              <span>اللون الثانوي (Secondary Color)</span>
-              <span className="text-xs font-mono text-gray-500">{settings.secondaryColor}</span>
-            </label>
-            <div className="flex gap-4 items-center">
-              <input 
-                type="color" 
-                className="w-16 h-16 rounded cursor-pointer border-0 p-0" 
-                value={settings.secondaryColor || '#1e40af'}
-                onChange={e => setSettings({...settings, secondaryColor: e.target.value})}
-              />
-              <p className="text-sm text-gray-500 flex-1">لون الـ Hover والتأثيرات، أو لون خلفية الفوتر.</p>
-            </div>
-          </div>
-          
-          <div className="mt-auto p-4 bg-gray-50 rounded-xl border">
-            <p className="text-sm text-gray-600 mb-3">تجربة حية للأزرار (Live Preview):</p>
-            <button 
-              className="px-6 py-2 rounded-lg text-white font-bold w-full transition-colors"
-              style={{ backgroundColor: settings.primaryColor }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = settings.secondaryColor || ''}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = settings.primaryColor || ''}
-            >
-              اضغط هنا
-            </button>
-          </div>
-        </section>
-      </div>
-    </div>
+    <DashboardPageTemplate
+      title="الهوية البصرية (Brand Identity)"
+      description="المكان الذي يُحدد اسم موقعك وشعاره وألوانه التي تنعكس على كل الصفحات."
+      headerActions={headerActions}
+      sections={sections}
+    />
   );
 }

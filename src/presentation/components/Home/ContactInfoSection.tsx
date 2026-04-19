@@ -51,20 +51,20 @@ export default function ContactInfoSection({ settings, locale }: { settings: any
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             {infoBlocks.map((block, idx) => (
               <a 
                 key={idx}
                 href={block.link}
                 target={block.link.startsWith('http') ? '_blank' : '_self'}
                 rel="noopener noreferrer"
-                className="bg-white dark:bg-slate-800 rounded-3xl p-8 text-center group hover:-translate-y-2 transition-all duration-300 shadow-lg border border-gray-100 dark:border-slate-700"
+                className="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-8 text-center group hover:-translate-y-2 transition-all duration-300 shadow-lg border border-gray-100 dark:border-slate-700"
               >
-                <div className="w-16 h-16 mx-auto bg-brand-teal/10 text-brand-teal group-hover:bg-brand-teal group-hover:text-white transition-colors rounded-full flex items-center justify-center text-2xl mb-6">
+                <div className="w-11 h-11 sm:w-16 sm:h-16 mx-auto bg-brand-teal/10 text-brand-teal group-hover:bg-brand-teal group-hover:text-white transition-colors rounded-full flex items-center justify-center text-xl sm:text-2xl mb-3 sm:mb-6">
                   {block.icon}
                 </div>
-                <h3 className="font-bold text-gray-900 dark:text-white text-xl mb-3">{block.title}</h3>
-                <p className="text-gray-500 dark:text-gray-400 font-medium" dir="ltr">{block.value}</p>
+                <h3 className="font-bold text-gray-900 dark:text-white text-sm sm:text-xl mb-1 sm:mb-3">{block.title}</h3>
+                <p className="text-gray-500 dark:text-gray-400 font-medium text-xs sm:text-base break-all" dir="ltr">{block.value}</p>
               </a>
             ))}
           </div>

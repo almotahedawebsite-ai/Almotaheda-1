@@ -282,6 +282,32 @@
   box-shadow: 0 6px 30px rgba(37, 211, 102, 0.6);
 }
 
+/* Phone call floating button — sits next to WhatsApp */
+.phone-float {
+  position: fixed;
+  bottom: 24px;
+  left: 96px; /* 24px gap + 60px whatsapp + 12px spacing */
+  z-index: 9999;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #0A2463;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(10, 36, 99, 0.45);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.phone-float:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 30px rgba(10, 36, 99, 0.65);
+  background: #3E92CC;
+}
+
 /* ======================================
    Print Styles (For Invoices)
    ====================================== */

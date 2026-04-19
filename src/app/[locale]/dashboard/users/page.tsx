@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { db } from '@/infrastructure/firebase/config';
-import {
-  collection, getDocs, doc, setDoc, deleteDoc, query, orderBy
-} from 'firebase/firestore';
+import { doc, getDocs, collection, deleteDoc, setDoc, query, orderBy } from 'firebase/firestore';
 import { FiUsers, FiLock, FiChevronDown, FiUser, FiTrash2, FiPlus } from 'react-icons/fi';
+import { getSuperAdminEmail } from '@/app/actions/auth';
 
 interface AdminUser {
   email: string;
@@ -28,11 +27,15 @@ export default function UsersManagementPage() {
   const [newAdminEmail, setNewAdminEmail] = useState('');
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
-
-  const SUPER_ADMIN = 'gemeslaim10@gmail.com';
+  const [superAdminEmail, setSuperAdminEmail] = useState('');
 
   const loadData = async () => {
     setLoading(true);
+    
+    // Securely fetch super admin email
+    const rootAdmin = await getSuperAdminEmail();
+    setSuperAdminEmail(rootAdmin);
+
     // Load admins
     const adminsSnap = await getDocs(collection(db, 'admins'));
     
@@ -44,10 +47,13 @@ export default function UsersManagementPage() {
 
     // Ensure super admin is strictly top and strictly unique
     const uniqueAdmins = new Map<string, AdminUser>();
-    uniqueAdmins.set(SUPER_ADMIN, { email: SUPER_ADMIN, addedAt: 'مدير النظام الأساسي', addedBy: 'system' });
+    if (rootAdmin) {
+      uniqueAdmins.set(rootAdmin, { email: rootAdmin, addedAt: 'مدير النظام الأساسي', addedBy: 'system' });
+    }
     
     firestoreAdmins.forEach(admin => {
-        if (admin.email !== SUPER_ADMIN) {
+        if (admin.email !== rootAdmin) {
+
             uniqueAdmins.set(admin.email, admin);
         }
     });
@@ -69,14 +75,14 @@ export default function UsersManagementPage() {
   const handleAddAdmin = async () => {
     const email = newAdminEmail.trim().toLowerCase();
     if (!email || !email.includes('@')) return alert('أدخل بريد إلكتروني صحيح');
-    if (email === SUPER_ADMIN) return alert('هذا هو الأدمن الرئيسي بالفعل');
+    if (email === superAdminEmail) return alert('هذا هو الأدمن الرئيسي بالفعل');
 
     setAdding(true);
     try {
       await setDoc(doc(db, 'admins', email), {
         email,
         addedAt: new Date().toISOString(),
-        addedBy: SUPER_ADMIN,
+        addedBy: superAdminEmail,
       });
       setNewAdminEmail('');
       await loadData();
@@ -89,7 +95,7 @@ export default function UsersManagementPage() {
   };
 
   const handleRemoveAdmin = async (email: string) => {
-    if (email === SUPER_ADMIN) return alert('لا يمكن حذف الأدمن الرئيسي');
+    if (email === superAdminEmail) return alert('لا يمكن حذف الأدمن الرئيسي');
     if (!confirm(`هل أنت متأكد من حذف ${email}؟`)) return;
     await deleteDoc(doc(db, 'admins', email));
     await loadData();
@@ -150,7 +156,7 @@ export default function UsersManagementPage() {
                 {admins.map(admin => (
                   <tr key={admin.email} className="border-b last:border-0 hover:bg-gray-50 transition-colors">
                     <td className="p-3 font-mono text-gray-800 flex items-center gap-2">
-                      {admin.email === SUPER_ADMIN && (
+                      {admin.email === superAdminEmail && (
                         <span className="bg-amber-100 text-amber-700 text-xs px-2 py-0.5 rounded font-bold">Root</span>
                       )}
                       {admin.email}
@@ -162,7 +168,7 @@ export default function UsersManagementPage() {
                       }
                     </td>
                     <td className="p-3">
-                      {admin.email !== SUPER_ADMIN && (
+                      {admin.email !== superAdminEmail && (
                         <button
                           onClick={() => handleRemoveAdmin(admin.email)}
                           className="text-red-500 hover:bg-red-50 px-3 py-1 rounded-lg font-bold text-xs transition-colors flex items-center gap-1"

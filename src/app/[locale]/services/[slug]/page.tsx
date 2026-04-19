@@ -4,7 +4,7 @@ import { ServerServiceRepository } from '@/infrastructure/repositories/server/Se
 import { ServerSettingsRepository } from '@/infrastructure/repositories/server/ServerSettingsRepository';
 import { tField } from '@/domain/types/settings';
 import { notFound } from 'next/navigation';
-import { FiArrowLeft, FiCalendar, FiMessageSquare, FiDroplet, FiShield, FiSearch, FiCoffee, FiTool, FiSun, FiBriefcase, FiUser, FiCheckCircle, FiStar } from 'react-icons/fi';
+import { FiArrowLeft, FiCalendar, FiMessageSquare, FiDroplet, FiShield, FiSearch, FiCoffee, FiTool, FiSun, FiBriefcase, FiUser, FiCheckCircle, FiStar, FiPhone } from 'react-icons/fi';
 
 const serviceIcons: Record<string, React.ReactNode> = {
   'cleaning': <FiDroplet />, 'sanitization': <FiShield />, 'pest-control': <FiSearch />, 'restaurant': <FiCoffee />,
@@ -122,13 +122,12 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {otherServices.map((s, idx) => (
-                <Link
+                <div
                   key={s.id}
-                  href={`/${locale}/services/${s.slug}`}
                   className="group bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 hover:border-brand-teal/50 hover:shadow-2xl hover:shadow-brand-teal/10 relative overflow-hidden flex flex-col transition-all duration-300 animate-fade-in-up"
                   style={{ animationDelay: `${idx * 0.05}s` }}
                 >
-                  <div className="h-40 relative overflow-hidden">
+                  <Link href={`/${locale}/services/${s.slug}`} className="block relative h-40 overflow-hidden">
                     {s.image ? (
                       <img 
                         src={s.image} 
@@ -145,14 +144,30 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                     <div className={`absolute bottom-3 w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-lg shadow-brand-teal/30 group-hover:-translate-y-1 transition-transform duration-300 ${locale === 'ar' ? 'right-3' : 'left-3'} bg-brand-teal text-white`}>
                       {serviceIcons[s.category] || <FiStar />}
                     </div>
-                  </div>
+                  </Link>
 
                   <div className="p-5 flex-1 flex flex-col relative z-10 bg-white dark:bg-slate-800">
-                    <h3 className="text-lg font-black text-gray-900 dark:text-white group-hover:text-brand-teal transition-colors line-clamp-2">
+                    <h3 className="text-lg font-black text-gray-900 dark:text-white group-hover:text-brand-teal transition-colors line-clamp-2 mb-4 flex-1">
                       {tField(s.name, locale)}
                     </h3>
+                    
+                    {/* Buttons */}
+                    <div className="mt-auto flex flex-col sm:flex-row gap-2 pt-3 border-t border-gray-100 dark:border-slate-700">
+                      <Link
+                        href={`/${locale}/services/${s.slug}`}
+                        className="flex-1 flex items-center justify-center gap-1 text-sm font-bold px-3 py-2 rounded-xl border-2 border-brand-teal text-brand-teal hover:bg-brand-teal hover:text-white transition-all duration-200"
+                      >
+                        {locale === 'ar' ? 'التفاصيل' : 'Details'} <FiArrowLeft className={`text-xs ${locale !== 'ar' ? 'rotate-180' : ''}`} />
+                      </Link>
+                      <Link
+                        href={`/${locale}/contact`}
+                        className="flex-1 flex items-center justify-center gap-1 text-sm font-bold px-3 py-2 rounded-xl border-2 border-brand-navy text-brand-navy hover:bg-brand-navy hover:text-white transition-all duration-200"
+                      >
+                        <FiPhone className="text-xs" /> {locale === 'ar' ? 'تواصل' : 'Contact'}
+                      </Link>
+                    </div>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
           </div>

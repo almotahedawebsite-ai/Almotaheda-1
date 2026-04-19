@@ -32,3 +32,14 @@ export interface Payment {
   confirmedAt: string;
   createdAt: string;
 }
+
+export interface BookingFormState {
+  customerName: string;
+  customerPhone: string;
+  customerEmail: string;
+  serviceId: string;
+  notes: string;
+  paymentMethod: PaymentMethod | '';
+  paymentProofUrl: string;
+}
+

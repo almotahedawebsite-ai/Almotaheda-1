@@ -6,6 +6,7 @@ import { ServerSettingsRepository } from '@/infrastructure/repositories/server/S
 import ConditionalLayout from '@/presentation/components/ConditionalLayout';
 import { Providers } from '@/presentation/components/Providers';
 import { tField } from '@/domain/types/settings';
+import { LoadingProvider } from '@/presentation/components/LoadingProvider';
 
 const almarai = Almarai({
   subsets: ['arabic'],
@@ -137,6 +138,7 @@ export default async function RootLayout({
         )}
       </head>
       <body className={`${almarai.variable} font-sans`}>
+
         {/* ===== GTM noscript ===== */}
         {settings.googleTagManagerId && (
           <noscript>
@@ -172,9 +174,11 @@ export default async function RootLayout({
         ` }} />
 
         <Providers enableDarkMode={!!settings.enableDarkMode}>
-          <ConditionalLayout settings={settings} currentLocale={locale}>
-            {children}
-          </ConditionalLayout>
+          <LoadingProvider logoUrl={settings.logoUrl || ''}>
+            <ConditionalLayout settings={settings} currentLocale={locale}>
+              {children}
+            </ConditionalLayout>
+          </LoadingProvider>
         </Providers>
 
         {/* ===== Custom Body Code (end of body) ===== */}

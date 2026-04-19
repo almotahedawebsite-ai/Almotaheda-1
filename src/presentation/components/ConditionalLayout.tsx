@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import WhatsAppCTA from './WhatsAppCTA';
+import PhoneCallCTA from './PhoneCallCTA';
 import { SiteSettings } from '@/domain/types/settings';
 
 interface Props {
@@ -34,6 +35,10 @@ export default function ConditionalLayout({ children, settings, currentLocale = 
       {/* WhatsApp Floating CTA */}
       {(settings.whatsappCta || settings.contactWhatsapp) && (
         <WhatsAppCTA phoneNumber={settings.whatsappCta || settings.contactWhatsapp || ''} />
+      )}
+      {/* Phone Call Floating CTA */}
+      {settings.contactPhone && (
+        <PhoneCallCTA phoneNumber={settings.contactPhone} locale={currentLocale} />
       )}
     </>
   );

@@ -28,6 +28,12 @@ export interface SiteSettings {
   primaryColor: string;
   secondaryColor: string;
 
+  // Navbar Appearance
+  navbarBgColor: string;       // e.g. '#ffffff'
+  navbarOpacity: number;       // 0–100 (default state)
+  navbarScrolledOpacity: number; // 0–100 (after scroll)
+  navbarTextColor: string;     // e.g. '#1e293b'
+
   // Corporate Data
   contactEmail: string;
   contactPhone: string;

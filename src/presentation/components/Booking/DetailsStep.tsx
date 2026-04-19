@@ -4,6 +4,7 @@ import { User } from 'firebase/auth';
 import { Service } from '@/domain/types/service';
 import { tField } from '@/domain/types/settings';
 import { FiEdit, FiInfo, FiArrowLeft } from 'react-icons/fi';
+import { BookingFormState } from '@/domain/types/booking';
 
 export default function DetailsStep({
   form,
@@ -13,8 +14,8 @@ export default function DetailsStep({
   locale,
   onSubmit
 }: {
-  form: any;
-  setForm: React.Dispatch<React.SetStateAction<any>>;
+  form: BookingFormState;
+  setForm: React.Dispatch<React.SetStateAction<BookingFormState>>;
   user: User | null;
   services: Service[];
   locale: string;

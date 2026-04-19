@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Service } from '@/domain/types/service';
 import { tField } from '@/domain/types/settings';
 import { FiCheckCircle, FiClipboard, FiClock, FiHome, FiMessageSquare } from 'react-icons/fi';
+import { BookingFormState } from '@/domain/types/booking';
 
 export default function ConfirmationStep({
   form,
@@ -11,7 +12,7 @@ export default function ConfirmationStep({
   selectedService,
   locale
 }: {
-  form: any;
+  form: BookingFormState;
   bookingId: string;
   settings: any;
   selectedService: Service | undefined;

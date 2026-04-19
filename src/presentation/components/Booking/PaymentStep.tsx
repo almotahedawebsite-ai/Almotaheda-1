@@ -2,6 +2,7 @@ import React from 'react';
 import { Service } from '@/domain/types/service';
 import { tField } from '@/domain/types/settings';
 import { FiClipboard, FiCreditCard, FiSmartphone, FiDollarSign, FiCamera, FiArrowRight, FiCheckCircle } from 'react-icons/fi';
+import { BookingFormState } from '@/domain/types/booking';
 
 export default function PaymentStep({
   form,
@@ -15,8 +16,8 @@ export default function PaymentStep({
   onSubmit,
   onBack
 }: {
-  form: any;
-  setForm: React.Dispatch<React.SetStateAction<any>>;
+  form: BookingFormState;
+  setForm: React.Dispatch<React.SetStateAction<BookingFormState>>;
   settings: any;
   submitting: boolean;
   uploadingProof: boolean;

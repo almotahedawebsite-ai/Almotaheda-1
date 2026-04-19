@@ -6,7 +6,7 @@ import { ServerSettingsRepository } from '@/infrastructure/repositories/server/S
 import DashboardClientLayout from './DashboardClientLayout';
 
 // The primary super-admin email from environment or fallback
-const SUPER_ADMIN = process.env.FIREBASE_SUPER_ADMIN || 'gemeslaim10@gmail.com';
+const SUPER_ADMIN = process.env.SUPER_ADMIN_EMAIL || '';
 
 export default async function DashboardLayout({ 
   children,

@@ -5,9 +5,16 @@ import { auth, db } from '@/infrastructure/firebase/config';
 import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { FiUsers, FiLock } from 'react-icons/fi';
+import { isSuperAdminEmail } from '@/app/actions/auth';
 
-const SUPER_ADMIN = 'gemeslaim10@gmail.com';
+const GoogleIcon = ({ mono = false }: { mono?: boolean }) => (
+  <svg className="w-5 h-5" viewBox="0 0 24 24">
+    <path fill={mono ? 'currentColor' : '#4285F4'} d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+    <path fill={mono ? 'currentColor' : '#34A853'} d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+    <path fill={mono ? 'currentColor' : '#FBBC05'} d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+    <path fill={mono ? 'currentColor' : '#EA4335'} d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+  </svg>
+);
 
 export default function LoginPage() {
   const router = useRouter();
@@ -16,12 +23,23 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [checking, setChecking] = useState(true);
 
+  const redirectingRef = React.useRef(false);
+
   // If already logged in, redirect accordingly
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        if (redirectingRef.current) return;
+
+        const errorParam = new URLSearchParams(window.location.search).get('error');
+        if (errorParam) {
+          setChecking(false);
+          return;
+        }
+
         try {
-          // If we have a user but might be missing a session cookie, sync it
+          redirectingRef.current = true;
+
           const idToken = await user.getIdToken();
           const sessionRes = await fetch('/api/auth/session', {
             method: 'POST',
@@ -33,23 +51,21 @@ export default function LoginPage() {
             const errorData = await sessionRes.json().catch(() => ({}));
             console.error('Server session not created:', errorData);
             await auth.signOut();
-            setError(`فشل تسجيل الدخول من الخادم الدلالية: ${errorData.details || 'تأكد من إعدادات Firebase Admin'}`);
+            setError(`فشل تسجيل الدخول من الخادم: ${errorData.details || 'تأكد من إعدادات Firebase Admin'}`);
+            redirectingRef.current = false;
             setChecking(false);
             return;
           }
 
           const email = user.email || '';
-          const isAdmin = email === SUPER_ADMIN || (await getDoc(doc(db, 'admins', email))).exists();
+          const isSuper = await isSuperAdminEmail(email);
+          const isAdmin = isSuper || (await getDoc(doc(db, 'admins', email))).exists();
           const currentLocale = window.location.pathname.split('/')[1] || 'ar';
-          
-          // Only auto-redirect if there's no explicit error showing (to avoid looping on real auth errors)
-          if (!searchParams.get('error')) {
-            router.push(isAdmin ? `/${currentLocale}/dashboard` : `/${currentLocale}/profile`);
-          } else {
-            setChecking(false);
-          }
+
+          router.replace(isAdmin ? `/${currentLocale}/dashboard` : `/${currentLocale}/profile`);
         } catch (error) {
           console.error('Session sync error:', error);
+          redirectingRef.current = false;
           setChecking(false);
         }
       } else {
@@ -57,16 +73,17 @@ export default function LoginPage() {
       }
     });
     return () => unsubscribe();
-  }, [router, searchParams]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Show unauthorized error from dashboard redirect
   useEffect(() => {
     if (searchParams.get('error') === 'unauthorized') {
-      setError('ليس لديك صلاحية الوصول للداشبورد. يمكنك تسجيل الدخول كعميل.');
+      setError('ليس لديك صلاحية الوصول للداشبورد.');
     }
   }, [searchParams]);
 
-  const handleGoogleLogin = async (intent: 'admin' | 'client') => {
+  const handleGoogleLogin = async () => {
     setLoading(true);
     setError('');
     try {
@@ -75,19 +92,12 @@ export default function LoginPage() {
       const user = result.user;
       const email = user.email || '';
 
-      // Check if admin
-      const isSuperAdmin = email === SUPER_ADMIN;
-      const adminDoc = isSuperAdmin ? null : await getDoc(doc(db, 'admins', email));
-      const isAdmin = isSuperAdmin || adminDoc?.exists();
+      // Detect role automatically
+      const isSuperAdminEnv = await isSuperAdminEmail(email);
+      const adminDoc = isSuperAdminEnv ? null : await getDoc(doc(db, 'admins', email));
+      const isAdmin = isSuperAdminEnv || adminDoc?.exists();
 
-      if (intent === 'admin' && !isAdmin) {
-        await auth.signOut();
-        setError('هذا البريد الإلكتروني غير مصرح له بالوصول كمشرف.');
-        setLoading(false);
-        return;
-      }
-
-      // Create Server Session
+      // Create server session
       const idToken = await user.getIdToken();
       const sessionRes = await fetch('/api/auth/session', {
         method: 'POST',
@@ -99,7 +109,6 @@ export default function LoginPage() {
         throw new Error('Failed to create server session');
       }
 
-      // Extract locale from current pathname or searchParams if needed
       const currentLocale = window.location.pathname.split('/')[1] || 'ar';
 
       if (isAdmin) {
@@ -107,7 +116,7 @@ export default function LoginPage() {
         return;
       }
 
-      // Save client to Firestore
+      // Save client profile to Firestore
       await setDoc(doc(db, 'clients', user.uid), {
         uid: user.uid,
         email: user.email,
@@ -115,7 +124,7 @@ export default function LoginPage() {
         photoURL: user.photoURL || '',
         lastLogin: new Date().toISOString(),
         createdAt: new Date().toISOString(),
-      }, { merge: true }); // merge: true to update lastLogin without overwriting createdAt
+      }, { merge: true });
 
       router.push(`/${currentLocale}/profile`);
     } catch (err: any) {
@@ -128,23 +137,26 @@ export default function LoginPage() {
 
   if (checking) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+      <div className="min-h-screen flex items-center justify-center bg-slate-900">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 flex flex-col justify-center items-center p-4" dir="rtl">
-      <div className="w-full max-w-md space-y-6">
+    <div
+      className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 flex flex-col justify-center items-center p-4"
+      dir="rtl"
+    >
+      <div className="w-full max-w-sm space-y-8">
 
         {/* Logo / Brand */}
-        <div className="text-center">
-          <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white text-3xl font-black mx-auto mb-4 shadow-lg shadow-blue-500/30">
+        <div className="text-center space-y-3">
+          <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white text-3xl font-black mx-auto shadow-lg shadow-blue-500/30">
             A
           </div>
           <h1 className="text-3xl font-black text-white">Agency Portal</h1>
-          <p className="text-slate-400 mt-2">اختر نوع دخولك للمتابعة</p>
+          <p className="text-slate-400 text-sm">سجّل دخولك للمتابعة — سيتم توجيهك تلقائياً حسب صلاحياتك</p>
         </div>
 
         {/* Error */}
@@ -154,49 +166,37 @@ export default function LoginPage() {
           </div>
         )}
 
-        {/* Client Login Card */}
-        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 space-y-4">
-          <div>
-            <h2 className="text-white font-bold text-lg flex items-center gap-2"><FiUsers /> دخول العملاء</h2>
-            <p className="text-slate-400 text-sm mt-1">للاطلاع على حسابك ومتابعة طلباتك</p>
+        {/* Single Login Card */}
+        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 space-y-5">
+          <div className="text-center space-y-1">
+            <p className="text-slate-300 text-sm">تسجيل الدخول باستخدام حسابك</p>
           </div>
+
           <button
-            onClick={() => handleGoogleLogin('client')}
+            onClick={handleGoogleLogin}
             disabled={loading}
-            className="w-full bg-white hover:bg-gray-50 text-gray-800 font-bold py-3.5 px-6 rounded-xl transition-colors shadow-lg flex items-center justify-center gap-3 disabled:opacity-50"
+            id="login-google-btn"
+            className="w-full bg-white hover:bg-gray-50 text-gray-800 font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <svg className="w-5 h-5" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-            </svg>
-            {loading ? 'جاري التحقق...' : 'تسجيل الدخول بجوجل'}
+            {loading ? (
+              <>
+                <div className="w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+                <span>جاري التحقق...</span>
+              </>
+            ) : (
+              <>
+                <GoogleIcon />
+                <span>تسجيل الدخول بجوجل</span>
+              </>
+            )}
           </button>
+
+          <p className="text-center text-slate-500 text-xs leading-relaxed">
+            سيتم توجيه المشرفين إلى لوحة التحكم تلقائياً
+          </p>
         </div>
 
-        {/* Admin Login Card */}
-        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 space-y-4">
-          <div>
-            <h2 className="text-white font-bold text-lg flex items-center gap-2"><FiLock /> دخول المشرفين</h2>
-            <p className="text-slate-400 text-sm mt-1">للوصول لإدارة المحتوى ولوحة التحكم</p>
-          </div>
-          <button
-            onClick={() => handleGoogleLogin('admin')}
-            disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-xl transition-colors shadow-lg flex items-center justify-center gap-3 disabled:opacity-50"
-          >
-            <svg className="w-5 h-5" viewBox="0 0 24 24">
-              <path fill="white" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-              <path fill="white" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="rgba(255,255,255,0.7)" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-              <path fill="rgba(255,255,255,0.85)" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-            </svg>
-            {loading ? 'جاري التحقق...' : 'دخول المشرفين بجوجل'}
-          </button>
-        </div>
-
-        <p className="text-center text-slate-500 text-xs">
+        <p className="text-center text-slate-600 text-xs">
           بتسجيل دخولك توافق على سياسة الخصوصية وشروط الاستخدام
         </p>
       </div>
