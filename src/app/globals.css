@@ -280,13 +280,14 @@
 .whatsapp-float:hover {
   transform: scale(1.1);
   box-shadow: 0 6px 30px rgba(37, 211, 102, 0.6);
+  z-index: 10000;
 }
 
-/* Phone call floating button — sits next to WhatsApp */
+/* Phone call floating button — sits above WhatsApp */
 .phone-float {
   position: fixed;
-  bottom: 24px;
-  left: 96px; /* 24px gap + 60px whatsapp + 12px spacing */
+  bottom: 96px; /* 24px gap + 60px whatsapp + 12px spacing */
+  left: 24px;
   z-index: 9999;
   width: 60px;
   height: 60px;
@@ -306,6 +307,40 @@
   transform: scale(1.1);
   box-shadow: 0 6px 30px rgba(10, 36, 99, 0.65);
   background: #3E92CC;
+  z-index: 10000;
+}
+
+/* ======================================
+   Social Media Floating Icons
+   ====================================== */
+.social-float-container {
+  position: fixed;
+  bottom: 32px;
+  left: 96px; /* 24px + 60px whatsapp + 12px spacing */
+  z-index: 9998;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.social-float-item {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: white;
+  color: #0A2463;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.social-float-item:hover {
+  transform: translateY(-5px);
+  background: #3E92CC;
+  color: white;
+  box-shadow: 0 6px 20px rgba(62, 146, 204, 0.4);
 }
 
 /* ======================================

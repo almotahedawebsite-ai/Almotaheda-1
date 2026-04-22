@@ -66,5 +66,10 @@ export interface SiteSettings {
   // System Toggles
   enableDarkMode: boolean;
   enableMultiLanguage: boolean;
-  defaultLocale?: 'ar' | 'en';
+  // Stats
+  apartmentsCleanedCount?: number;
+  villasCleanedCount?: number;
+
+  // Most Requested Places
+  topRequestedPlaces?: { ar: string; en: string; category?: string }[];
 }

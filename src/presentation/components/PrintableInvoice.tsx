@@ -50,7 +50,7 @@ export default function PrintableInvoice({ booking, companyName, companyPhone, c
             <h3 className="text-xs font-black text-gray-400 uppercase mb-2">بيانات العميل</h3>
             <p className="font-bold text-gray-900">{booking.customerName}</p>
             <p className="text-gray-600 text-sm" dir="ltr">{booking.customerPhone}</p>
-            {booking.customerEmail && <p className="text-gray-600 text-sm">{booking.customerEmail}</p>}
+            {booking.customerAddress && <p className="text-gray-600 text-sm">{booking.customerAddress}</p>}
           </div>
           <div>
             <h3 className="text-xs font-black text-gray-400 uppercase mb-2">بيانات الشركة</h3>

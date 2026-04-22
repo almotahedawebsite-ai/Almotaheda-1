@@ -27,7 +27,7 @@ export class ServerServiceRepository extends ServerBaseRepository<Service> {
         const snapshot = await this.collection.orderBy('order', 'asc').get();
         return snapshot.docs.map(doc => doc.data() as Service);
       },
-      ['all-services-v2'],
+      ['all-services-v3'],
       { tags: ['services'] }
     )();
   }
@@ -41,7 +41,7 @@ export class ServerServiceRepository extends ServerBaseRepository<Service> {
           .get();
         return snapshot.docs.map(doc => doc.data() as Service);
       },
-      ['active-services-v2'],
+      ['active-services-v3'],
       { tags: ['services'] }
     )();
   }

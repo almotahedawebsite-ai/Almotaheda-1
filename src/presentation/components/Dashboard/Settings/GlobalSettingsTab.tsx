@@ -1,7 +1,7 @@
 import React from 'react';
 import { TranslatableField } from '@/presentation/components/Dashboard/TranslatableField';
 import { TranslatableString } from '@/domain/types/settings';
-import { FiImage, FiSearch, FiInfo, FiSettings, FiChevronDown, FiAlertTriangle } from 'react-icons/fi';
+import { FiImage, FiSearch, FiInfo, FiSettings, FiChevronDown, FiAlertTriangle, FiBriefcase, FiPlus, FiTrash2, FiHome } from 'react-icons/fi';
 
 export default function GlobalSettingsTab({
   settings,
@@ -119,6 +119,124 @@ export default function GlobalSettingsTab({
             </div>
           </div>
         </details>
+      </section>
+      {/* ── Portfolio: Stats ── */}
+      <section className="md:col-span-2 bg-white p-8 rounded-3xl shadow-sm border border-gray-100 space-y-6">
+        <h2 className="text-xl font-black flex items-center gap-2">
+          <FiHome className="text-brand-teal" /> أرقام سابقة الأعمال
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">عدد الشقق التي تم تقديم الخدمة لها</label>
+            <input
+              type="number"
+              min={0}
+              value={settings.apartmentsCleanedCount ?? ''}
+              onChange={e => setSettings({ ...settings, apartmentsCleanedCount: Number(e.target.value) })}
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-lg font-bold"
+              placeholder="مثال: 1500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">عدد الفيلات التي تم تقديم الخدمة لها</label>
+            <input
+              type="number"
+              min={0}
+              value={settings.villasCleanedCount ?? ''}
+              onChange={e => setSettings({ ...settings, villasCleanedCount: Number(e.target.value) })}
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-lg font-bold"
+              placeholder="مثال: 450"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ── Portfolio: Places ── */}
+      <section className="md:col-span-2 bg-white p-8 rounded-3xl shadow-sm border border-gray-100 space-y-6">
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          <h2 className="text-xl font-black flex items-center gap-2">
+            <FiBriefcase className="text-brand-teal" /> سابقة الأعمال (أبرز المواقع)
+          </h2>
+          <button
+            type="button"
+            onClick={() => {
+              const places = settings.topRequestedPlaces ?? [];
+              setSettings({
+                ...settings,
+                topRequestedPlaces: [...places, { ar: '', en: '', category: 'hotels' }],
+              });
+            }}
+            className="inline-flex items-center gap-2 bg-brand-teal text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-brand-teal/80 transition-colors"
+          >
+            <FiPlus /> إضافة مكان جديد
+          </button>
+        </div>
+
+        <div className="space-y-3">
+          {(settings.topRequestedPlaces ?? []).map((place: { ar: string; en: string; category?: string }, idx: number) => (
+            <div key={idx} className="flex items-center gap-3 bg-gray-50 rounded-2xl p-3 border border-gray-100">
+              {/* Category */}
+              <select
+                value={place.category ?? 'hotels'}
+                onChange={e => {
+                  const updated = [...(settings.topRequestedPlaces ?? [])];
+                  updated[idx] = { ...updated[idx], category: e.target.value };
+                  setSettings({ ...settings, topRequestedPlaces: updated });
+                }}
+                className="border border-gray-200 rounded-xl px-3 py-2 text-sm font-bold bg-white shrink-0"
+              >
+                <option value="hotels">🏨 فنادق</option>
+                <option value="government">🏛️ حكومي</option>
+                <option value="military">🛡️ عسكري</option>
+                <option value="malls">🛍️ مولات</option>
+                <option value="universities">🎓 جامعات</option>
+                <option value="commercial">🏪 تجاري</option>
+                <option value="towers">🏙️ أبراج</option>
+                <option value="companies">📊 شركات</option>
+              </select>
+              {/* Arabic name */}
+              <input
+                type="text"
+                value={place.ar}
+                onChange={e => {
+                  const updated = [...(settings.topRequestedPlaces ?? [])];
+                  updated[idx] = { ...updated[idx], ar: e.target.value };
+                  setSettings({ ...settings, topRequestedPlaces: updated });
+                }}
+                className="flex-1 border border-gray-200 rounded-xl px-3 py-2 text-sm"
+                placeholder="الاسم بالعربي"
+                dir="rtl"
+              />
+              {/* English name */}
+              <input
+                type="text"
+                value={place.en}
+                onChange={e => {
+                  const updated = [...(settings.topRequestedPlaces ?? [])];
+                  updated[idx] = { ...updated[idx], en: e.target.value };
+                  setSettings({ ...settings, topRequestedPlaces: updated });
+                }}
+                className="flex-1 border border-gray-200 rounded-xl px-3 py-2 text-sm"
+                placeholder="English name"
+                dir="ltr"
+              />
+              {/* Delete */}
+              <button
+                type="button"
+                onClick={() => {
+                  const updated = (settings.topRequestedPlaces ?? []).filter((_: unknown, i: number) => i !== idx);
+                  setSettings({ ...settings, topRequestedPlaces: updated });
+                }}
+                className="text-red-400 hover:text-red-600 transition-colors p-2 rounded-xl hover:bg-red-50"
+              >
+                <FiTrash2 />
+              </button>
+            </div>
+          ))}
+          {(settings.topRequestedPlaces ?? []).length === 0 && (
+            <p className="text-gray-400 text-center py-6 text-sm">لا توجد أماكن مضافة — اضغط "إضافة مكان جديد"</p>
+          )}
+        </div>
       </section>
     </div>
   );

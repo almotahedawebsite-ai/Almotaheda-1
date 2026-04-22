@@ -147,7 +147,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                   </Link>
 
                   <div className="p-5 flex-1 flex flex-col relative z-10 bg-white dark:bg-slate-800">
-                    <h3 className="text-lg font-black text-gray-900 dark:text-white group-hover:text-brand-teal transition-colors line-clamp-2 mb-4 flex-1">
+                    <h3 className="text-lg font-black text-gray-900 dark:text-white group-hover:text-brand-teal transition-colors line-clamp-3 mb-4 flex-1" title={typeof s.name === 'object' ? (s.name as any)[locale] : s.name}>
                       {tField(s.name, locale)}
                     </h3>
                     

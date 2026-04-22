@@ -57,7 +57,7 @@ export class ServerSettingsRepository extends ServerBaseRepository<SiteSettings>
           defaultLocale: 'ar'
         } as SiteSettings;
       },
-      ['global-settings'],
+      ['global-settings-v2'],
       { tags: ['settings'] }
     )();
   }

@@ -34,7 +34,7 @@ export default function BookingPage() {
   const [form, setForm] = useState({
     customerName: '',
     customerPhone: '',
-    customerEmail: '',
+    customerAddress: '',
     serviceId: preSelectedService,
     notes: '',
     paymentMethod: '' as '' | 'instapay_qr' | 'e_wallet',
@@ -48,7 +48,6 @@ export default function BookingPage() {
         setForm(prev => ({
           ...prev,
           customerName: u.displayName || prev.customerName,
-          customerEmail: u.email || prev.customerEmail,
         }));
       }
     });
@@ -115,7 +114,7 @@ export default function BookingPage() {
         id,
         customerName: form.customerName,
         customerPhone: form.customerPhone,
-        customerEmail: form.customerEmail,
+        customerAddress: form.customerAddress,
         customerUid: user?.uid || '',
         serviceId: form.serviceId,
         serviceName,

@@ -32,7 +32,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     <div className="animate-fade-in-up">
       <HeroSection settings={settings} locale={locale} />
       <ServicesSection services={services} locale={locale} />
-      <KeyClientsSection clients={clients} locale={locale} />
+      <KeyClientsSection clients={clients} locale={locale} settings={settings} />
       <WhyUsSection locale={locale} />
       <BranchesSection branches={branches} locale={locale} />
       <SocialMediaSection settings={settings} locale={locale} />

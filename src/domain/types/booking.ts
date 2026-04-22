@@ -6,7 +6,7 @@ export interface Booking {
   id: string;
   customerName: string;
   customerPhone: string;
-  customerEmail: string;
+  customerAddress: string;
   customerUid?: string;
   serviceId: string;
   serviceName: string;
@@ -36,7 +36,7 @@ export interface Payment {
 export interface BookingFormState {
   customerName: string;
   customerPhone: string;
-  customerEmail: string;
+  customerAddress: string;
   serviceId: string;
   notes: string;
   paymentMethod: PaymentMethod | '';

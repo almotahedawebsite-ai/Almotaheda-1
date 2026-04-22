@@ -1,13 +1,11 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // Helper: Check if user is authenticated
+
     function isAuthenticated() {
       return request.auth != null;
     }
 
-    // Helper: Check if user is an admin
     function isAdmin() {
       return request.auth != null && (
         request.auth.token.email == 'gemeslaim10@gmail.com' ||
@@ -16,7 +14,6 @@ service cloud.firestore {
       );
     }
 
-    // --- PUBLIC READ, ADMIN WRITE ---
     match /services/{docId} {
       allow read: if true;
       allow write: if isAdmin();
@@ -49,8 +46,6 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
-
-    // --- CREATED BY ANYONE, READ/MANAGED BY ADMIN OR OWNER ---
     match /bookings/{docId} {
       allow create: if true;
       allow read: if isAdmin() || (isAuthenticated() && request.auth.uid == resource.data.customerUid);
@@ -65,8 +60,6 @@ service cloud.firestore {
       allow create: if true;
       allow read, update, delete: if isAdmin();
     }
-
-    // --- ADMIN ONLY ---
     match /contracts/{docId} {
       allow read, write: if isAdmin();
     }
@@ -76,10 +69,9 @@ service cloud.firestore {
     }
     match /clients/{uid} {
       allow create: if true;
-      allow read, update, delete: if isAdmin();
+      allow read, update: if isAdmin() || (isAuthenticated() && request.auth.uid == uid);
+      allow delete: if isAdmin();
     }
-    
-    // --- Store Orders ---
     match /orders/{docId} {
       allow create: if true;
       allow read: if isAdmin() || (isAuthenticated() && request.auth.uid == resource.data.userId);

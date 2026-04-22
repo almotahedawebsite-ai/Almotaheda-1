@@ -29,9 +29,13 @@ export default function ProfilePage() {
         return;
       }
       setUser(u);
-      const snap = await getDoc(doc(db, 'clients', u.uid));
-      if (snap.exists()) {
-        setClientData(snap.data() as ClientData);
+      try {
+        const snap = await getDoc(doc(db, 'clients', u.uid));
+        if (snap.exists()) {
+          setClientData(snap.data() as ClientData);
+        }
+      } catch {
+        // Permission denied or no document — show profile from Firebase Auth only
       }
       setLoading(false);
     });

@@ -14,7 +14,7 @@ export class ServerBranchRepository extends ServerBaseRepository<Branch> {
         const snapshot = await this.collection.orderBy('order', 'asc').get();
         return snapshot.docs.map(doc => doc.data() as Branch);
       },
-      ['all-branches-v2'],
+      ['all-branches-v3'],
       { tags: ['branches'] }
     )();
   }
@@ -28,7 +28,7 @@ export class ServerBranchRepository extends ServerBaseRepository<Branch> {
           .get();
         return snapshot.docs.map(doc => doc.data() as Branch);
       },
-      ['active-branches-v2'],
+      ['active-branches-v3'],
       { tags: ['branches'] }
     )();
   }

@@ -6,6 +6,7 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import WhatsAppCTA from './WhatsAppCTA';
 import PhoneCallCTA from './PhoneCallCTA';
+import FloatingSocialLinks from './FloatingSocialLinks';
 import { SiteSettings } from '@/domain/types/settings';
 
 interface Props {
@@ -39,6 +40,10 @@ export default function ConditionalLayout({ children, settings, currentLocale = 
       {/* Phone Call Floating CTA */}
       {settings.contactPhone && (
         <PhoneCallCTA phoneNumber={settings.contactPhone} locale={currentLocale} />
+      )}
+      {/* Social Media Links Floating */}
+      {settings.socialLinks && settings.socialLinks.length > 0 && (
+        <FloatingSocialLinks socialLinks={settings.socialLinks} />
       )}
     </>
   );

@@ -80,7 +80,7 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
                   </Link>
 
                   <div className="p-3 sm:p-6 flex-1 flex flex-col relative z-10 bg-white dark:bg-slate-800">
-                    <h3 className="text-sm sm:text-xl font-black text-gray-900 dark:text-white mb-1 sm:mb-2 group-hover:text-brand-teal transition-colors line-clamp-1">
+                    <h3 className="text-sm sm:text-xl font-black text-gray-900 dark:text-white mb-1 sm:mb-2 group-hover:text-brand-teal transition-colors line-clamp-3" title={typeof service.name === 'object' ? (service.name as any)[locale] : service.name}>
                       {tField(service.name, locale)}
                     </h3>
                     {tField(service.description, locale) && (

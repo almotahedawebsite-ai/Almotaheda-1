@@ -150,7 +150,7 @@ export default function DashboardBookingsPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100"><span className="text-gray-500 text-xs font-bold mb-1 block">الاسم</span><p className="font-black text-gray-900">{selectedBooking.customerName}</p></div>
                 <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100"><span className="text-gray-500 text-xs font-bold mb-1 block">الهاتف</span><p className="font-black text-gray-900" dir="ltr">{selectedBooking.customerPhone}</p></div>
-                <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100"><span className="text-gray-500 text-xs font-bold mb-1 block">البريد</span><p className="font-black text-gray-900 text-sm overflow-hidden text-ellipsis">{selectedBooking.customerEmail || '—'}</p></div>
+                <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100"><span className="text-gray-500 text-xs font-bold mb-1 block">العنوان</span><p className="font-black text-gray-900 text-sm overflow-hidden text-ellipsis">{selectedBooking.customerAddress || '—'}</p></div>
                 <div className="bg-brand-teal/5 border border-brand-teal/20 p-4 rounded-2xl"><span className="text-brand-teal/70 text-xs font-bold mb-1 block">الخدمة المطلوبة</span><p className="font-black text-brand-teal text-lg">{selectedBooking.serviceName}</p></div>
               </div>
 

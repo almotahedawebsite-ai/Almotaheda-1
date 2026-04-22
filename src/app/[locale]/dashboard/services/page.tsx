@@ -6,7 +6,7 @@ import { ServiceRepository } from '@/infrastructure/repositories/ServiceReposito
 import { CloudinaryService } from '@/infrastructure/services/CloudinaryService';
 import { Service } from '@/domain/types/service';
 import { tField } from '@/domain/types/settings';
-import { FiLayers, FiPlus, FiCheck, FiPauseCircle, FiEdit2, FiTrash2, FiSave, FiX, FiArrowLeft } from 'react-icons/fi';
+import { FiLayers, FiPlus, FiCheck, FiPauseCircle, FiEdit2, FiTrash2, FiSave, FiX, FiArrowLeft, FiToggleLeft, FiToggleRight } from 'react-icons/fi';
 
 export default function DashboardServicesPage() {
   const [services, setServices] = useState<Service[]>([]);
@@ -100,6 +100,34 @@ export default function DashboardServicesPage() {
     }
   };
 
+  const handleToggleActive = async (service: Service) => {
+    try {
+      await repo.update(service.id, { isActive: !service.isActive });
+      await fetchServices();
+    } catch (err) {
+      alert('حدث خطأ');
+    }
+  };
+
+  const updateSubService = (idx: number, lang: string, value: string) => {
+    if (!editingService) return;
+    const subs: any[] = [...((editingService as any).subServices ?? [])];
+    subs[idx] = { ...subs[idx], [lang]: value };
+    setEditingService({ ...editingService, subServices: subs } as any);
+  };
+
+  const addSubService = () => {
+    if (!editingService) return;
+    const subs: any[] = [...((editingService as any).subServices ?? []), { ar: '', en: '' }];
+    setEditingService({ ...editingService, subServices: subs } as any);
+  };
+
+  const removeSubService = (idx: number) => {
+    if (!editingService) return;
+    const subs = ((editingService as any).subServices ?? []).filter((_: any, i: number) => i !== idx);
+    setEditingService({ ...editingService, subServices: subs } as any);
+  };
+
   const updateField = (field: string, value: any) => {
     if (!editingService) return;
     setEditingService({ ...editingService, [field]: value });
@@ -162,9 +190,19 @@ export default function DashboardServicesPage() {
                       <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs font-bold">{service.category}</span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`px-3 py-1 rounded-lg text-xs font-bold flex w-fit items-center gap-1 ${service.isActive ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
-                        {service.isActive ? <><FiCheck /> مفعّلة</> : <><FiPauseCircle /> معطّلة</>}
-                      </span>
+                      <button
+                        onClick={() => handleToggleActive(service)}
+                        className={`px-3 py-1 rounded-lg text-xs font-bold flex w-fit items-center gap-1 transition-colors ${
+                          service.isActive
+                            ? 'bg-green-50 text-green-600 hover:bg-green-100'
+                            : 'bg-red-50 text-red-500 hover:bg-red-100'
+                        }`}
+                        title={service.isActive ? 'اضغط لتعطيل' : 'اضغط لتفعيل'}
+                      >
+                        {service.isActive
+                          ? <><FiToggleRight className="text-base" /> مفعّلة</>
+                          : <><FiToggleLeft className="text-base" /> معطّلة</>}
+                      </button>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
@@ -317,6 +355,50 @@ export default function DashboardServicesPage() {
                     className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-center focus:ring-2 focus:ring-brand-teal outline-none"
                   />
                 </div>
+              </div>
+
+              {/* Sub-services */}
+              <div className="bg-gray-50 p-5 rounded-2xl border border-gray-100 space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-black text-gray-700">الخدمات الفرعية</label>
+                  <button
+                    type="button"
+                    onClick={addSubService}
+                    className="text-xs bg-brand-teal text-white px-3 py-1.5 rounded-lg font-bold flex items-center gap-1 hover:bg-brand-navy transition-colors"
+                  >
+                    <FiPlus /> إضافة
+                  </button>
+                </div>
+                {((editingService as any).subServices ?? []).length === 0 && (
+                  <p className="text-xs text-gray-400 text-center py-2">لا توجد خدمات فرعية</p>
+                )}
+                {((editingService as any).subServices ?? []).map((sub: any, idx: number) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={sub.ar}
+                      onChange={e => updateSubService(idx, 'ar', e.target.value)}
+                      className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-xs"
+                      placeholder="الاسم بالعربي"
+                      dir="rtl"
+                    />
+                    <input
+                      type="text"
+                      value={sub.en}
+                      onChange={e => updateSubService(idx, 'en', e.target.value)}
+                      className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-xs"
+                      placeholder="English name"
+                      dir="ltr"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeSubService(idx)}
+                      className="text-red-400 hover:text-red-600 p-1.5 rounded-lg hover:bg-red-50 transition-colors"
+                    >
+                      <FiTrash2 className="text-sm" />
+                    </button>
+                  </div>
+                ))}
               </div>
 
               <label className="flex items-center gap-3 p-4 bg-brand-teal/5 rounded-xl border border-brand-teal/20 cursor-pointer hover:bg-brand-teal/10 transition-colors">

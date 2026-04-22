@@ -57,14 +57,13 @@ export default function DetailsStep({
       </div>
 
       <div>
-        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">البريد الإلكتروني</label>
+        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">العنوان</label>
         <input
-          type="email"
-          value={form.customerEmail}
-          onChange={(e) => setForm((prev: any) => ({ ...prev, customerEmail: e.target.value }))}
+          type="text"
+          value={form.customerAddress}
+          onChange={(e) => setForm((prev: any) => ({ ...prev, customerAddress: e.target.value }))}
           className="w-full border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-brand-teal/20 focus:border-brand-teal outline-none transition-all text-gray-900 dark:text-white"
-          dir="ltr"
-          placeholder="email@example.com"
+          placeholder="أدخل العنوان بالتفصيل"
         />
       </div>
 

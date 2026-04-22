@@ -14,7 +14,7 @@ export class ServerKeyClientRepository extends ServerBaseRepository<KeyClient> {
         const snapshot = await this.collection.orderBy('order', 'asc').get();
         return snapshot.docs.map(doc => doc.data() as KeyClient);
       },
-      ['all-key-clients-v2'],
+      ['all-key-clients-v3'],
       { tags: ['key_clients'] }
     )();
   }
@@ -28,7 +28,7 @@ export class ServerKeyClientRepository extends ServerBaseRepository<KeyClient> {
           .get();
         return snapshot.docs.map(doc => doc.data() as KeyClient);
       },
-      ['active-key-clients-v2'],
+      ['active-key-clients-v3'],
       { tags: ['key_clients'] }
     )();
   }
