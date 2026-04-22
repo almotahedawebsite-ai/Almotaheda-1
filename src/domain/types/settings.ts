@@ -66,6 +66,7 @@ export interface SiteSettings {
   // System Toggles
   enableDarkMode: boolean;
   enableMultiLanguage: boolean;
+  defaultLocale?: string;
   // Stats
   apartmentsCleanedCount?: number;
   villasCleanedCount?: number;
