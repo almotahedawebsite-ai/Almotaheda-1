@@ -5,7 +5,7 @@ import { db } from '@/infrastructure/firebase/config';
 import { collection, getCountFromServer } from 'firebase/firestore';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { FiSmile, FiLayers, FiStar, FiMap, FiList, FiFileText, FiInbox, FiUsers, FiBarChart2, FiZap, FiPenTool, FiSettings, FiArrowLeft } from 'react-icons/fi';
+import { FiSmile, FiLayers, FiStar, FiMap, FiList, FiFileText, FiInbox, FiUsers, FiBarChart2, FiZap, FiPenTool, FiSettings, FiArrowLeft, FiRefreshCw } from 'react-icons/fi';
 
 export default function DashboardHome() {
   const params = useParams();
@@ -21,6 +21,24 @@ export default function DashboardHome() {
     admins: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [purging, setPurging] = useState(false);
+
+  const purgeCache = async () => {
+    setPurging(true);
+    try {
+      const res = await fetch('/api/revalidate-settings', { method: 'POST' });
+      const data = await res.json();
+      if (data.revalidated) {
+        alert('✅ تم تفريغ الكاش بنجاح! الموقع سيعرض أحدث البيانات الآن.');
+      } else {
+        alert('❌ حدث خطأ: ' + (data.error || 'غير معروف'));
+      }
+    } catch (e) {
+      alert('❌ فشل الاتصال بالسيرفر');
+    } finally {
+      setPurging(false);
+    }
+  };
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -134,6 +152,14 @@ export default function DashboardHome() {
             <Link href={`/${currentLocale}/dashboard/preferences`} className="p-4 bg-gray-50 rounded-2xl border border-gray-100 flex flex-col items-center justify-center gap-2 hover:bg-brand-teal/5 hover:border-brand-teal/20 transition-all font-bold text-gray-600 text-sm">
               <FiSettings className="text-slate-500 text-xl" /> الإعدادات
             </Link>
+            <button
+              onClick={purgeCache}
+              disabled={purging}
+              className="p-4 bg-red-50 rounded-2xl border border-red-100 flex flex-col items-center justify-center gap-2 hover:bg-red-100 hover:border-red-300 transition-all font-bold text-red-600 text-sm disabled:opacity-50"
+            >
+              <FiRefreshCw className={`text-red-500 text-xl ${purging ? 'animate-spin' : ''}`} />
+              {purging ? 'جاري التفريغ...' : 'تفريغ الكاش'}
+            </button>
           </div>
         </div>
       </div>
