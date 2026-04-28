@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { db } from '@/infrastructure/firebase/config';
 import { BookingRepository } from '@/infrastructure/repositories/BookingRepository';
 import { Booking } from '@/domain/types/booking';
-import { FiList, FiClock, FiCheckCircle, FiCheck, FiXCircle, FiX, FiZoomIn, FiSmartphone, FiCreditCard } from 'react-icons/fi';
+import { FiList, FiClock, FiCheckCircle, FiCheck, FiXCircle, FiX } from 'react-icons/fi';
 
 const statusLabels: Record<string, { label: React.ReactNode; color: string }> = {
   pending: { label: <span className="flex items-center gap-1"><FiClock className="w-4 h-4" /> قيد الانتظار</span>, color: 'bg-amber-50 text-amber-700' },
@@ -13,11 +13,6 @@ const statusLabels: Record<string, { label: React.ReactNode; color: string }> = 
   cancelled: { label: <span className="flex items-center gap-1"><FiXCircle className="w-4 h-4" /> ملغي</span>, color: 'bg-red-50 text-red-700' },
 };
 
-const paymentLabels: Record<string, { label: React.ReactNode; color: string }> = {
-  pending: { label: <span className="flex items-center gap-1"><FiClock className="w-4 h-4" /> قيد المراجعة</span>, color: 'bg-amber-50 text-amber-700' },
-  confirmed: { label: <span className="flex items-center gap-1"><FiCheckCircle className="w-4 h-4" /> تم التأكيد</span>, color: 'bg-green-50 text-green-700' },
-  rejected: { label: <span className="flex items-center gap-1"><FiXCircle className="w-4 h-4" /> مرفوض</span>, color: 'bg-red-50 text-red-700' },
-};
 
 export default function DashboardBookingsPage() {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -84,7 +79,6 @@ export default function DashboardBookingsPage() {
                   <th className="text-right px-4 py-4 text-xs font-black text-gray-500">العميل</th>
                   <th className="text-right px-4 py-4 text-xs font-black text-gray-500">الخدمة</th>
                   <th className="text-right px-4 py-4 text-xs font-black text-gray-500">الحالة</th>
-                  <th className="text-right px-4 py-4 text-xs font-black text-gray-500">الدفع</th>
                   <th className="text-right px-4 py-4 text-xs font-black text-gray-500">التاريخ</th>
                   <th className="text-right px-4 py-4 text-xs font-black text-gray-500">إجراءات</th>
                 </tr>
@@ -100,11 +94,6 @@ export default function DashboardBookingsPage() {
                     <td className="px-4 py-4">
                       <span className={`px-3 py-1 rounded-lg text-xs font-bold ${statusLabels[booking.status]?.color}`}>
                         {statusLabels[booking.status]?.label}
-                      </span>
-                    </td>
-                    <td className="px-4 py-4">
-                      <span className={`px-3 py-1 rounded-lg text-xs font-bold ${paymentLabels[booking.paymentStatus]?.color}`}>
-                        {paymentLabels[booking.paymentStatus]?.label}
                       </span>
                     </td>
                     <td className="px-4 py-4 text-xs text-gray-500">
@@ -161,43 +150,12 @@ export default function DashboardBookingsPage() {
                 </div>
               )}
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <span className="text-gray-500 text-xs font-bold mb-2 block">حالة الحجز</span>
-                  <p className={`inline-block px-4 py-2 rounded-xl text-sm font-black ${statusLabels[selectedBooking.status]?.color}`}>
-                    {statusLabels[selectedBooking.status]?.label}
-                  </p>
-                </div>
-                <div>
-                  <span className="text-gray-500 text-xs font-bold mb-2 block">حالة الدفع</span>
-                  <p className={`inline-block px-4 py-2 rounded-xl text-sm font-black ${paymentLabels[selectedBooking.paymentStatus]?.color}`}>
-                    {paymentLabels[selectedBooking.paymentStatus]?.label}
-                  </p>
-                </div>
+              <div>
+                <span className="text-gray-500 text-xs font-bold mb-2 block">حالة الحجز</span>
+                <p className={`inline-block px-4 py-2 rounded-xl text-sm font-black ${statusLabels[selectedBooking.status]?.color}`}>
+                  {statusLabels[selectedBooking.status]?.label}
+                </p>
               </div>
-
-              {selectedBooking.paymentMethod && (
-                <div>
-                  <span className="text-gray-500 text-sm font-bold block mb-2">طريقة الدفع</span>
-                  <div className="bg-gray-50 px-4 py-3 rounded-xl border border-gray-100 inline-flex items-center">
-                    <p className="font-black text-gray-900 flex items-center gap-2">
-                       {selectedBooking.paymentMethod === 'instapay_qr' ? <><FiSmartphone className="text-brand-teal" /> كود خصم / InstaPay QR</> : <><FiCreditCard className="text-brand-teal" /> محفظة إلكترونية</>}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {selectedBooking.paymentProofUrl && (
-                <div>
-                  <span className="text-gray-500 text-sm font-bold block mb-3">صورة إثبات الدفع المرفقة</span>
-                  <a href={selectedBooking.paymentProofUrl} target="_blank" rel="noreferrer" className="block relative group overflow-hidden rounded-2xl border border-gray-200">
-                    <img src={selectedBooking.paymentProofUrl} alt="Payment Proof" className="w-full max-h-80 object-contain hover:scale-105 transition-transform duration-500" />
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <span className="text-white font-bold bg-black/50 px-4 py-2 rounded-xl backdrop-blur-sm flex items-center gap-2"><FiZoomIn /> تكبير الصورة</span>
-                    </div>
-                  </a>
-                </div>
-              )}
 
             </div>
             

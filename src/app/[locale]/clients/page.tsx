@@ -91,8 +91,8 @@ export default async function ClientsPage({ params }: { params: Promise<{ locale
                   href={`/${locale}/clients/${client.id}`}
                   className="card-hover group bg-gray-50 dark:bg-slate-800 rounded-3xl p-10 border border-gray-100 dark:border-slate-700 hover:border-brand-teal/30 text-center"
                 >
-                  {client.logo ? (
-                    <img src={client.logo} alt={tField(client.name, locale)} className="w-24 h-24 mx-auto mb-6 object-contain rounded-2xl" />
+                  {(client.logo || client.image) ? (
+                    <img src={client.logo || client.image} alt={tField(client.name, locale)} className="w-24 h-24 mx-auto mb-6 object-contain rounded-2xl" />
                   ) : (
                     <div className="w-24 h-24 mx-auto mb-6 bg-brand-navy/5 dark:bg-brand-teal/10 rounded-2xl flex items-center justify-center text-5xl group-hover:scale-110 transition-transform text-brand-navy">
                       <FiBriefcase />

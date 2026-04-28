@@ -18,10 +18,10 @@ interface Props {
 export default function ConditionalLayout({ children, settings, currentLocale = 'ar' }: Props) {
   const pathname = usePathname();
 
-  // Hide the global Navbar/Footer if the user is in Dashboard or Login
-  const isDashboard = pathname.includes('/dashboard') || pathname.includes('/login');
+  // Hide the global Navbar/Footer for Dashboard, Login, and QR landing page
+  const isBarePage = pathname.includes('/dashboard') || pathname.includes('/login') || pathname.endsWith('/qr');
 
-  if (isDashboard) {
+  if (isBarePage) {
     return <>{children}</>;
   }
 

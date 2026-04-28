@@ -51,10 +51,6 @@ export interface SiteSettings {
   // WhatsApp CTA
   whatsappCta: string;
 
-  // Payment Settings
-  instapayQrImage: string;
-  eWalletNumber: string;
-
   // Per-Page SEO
   pagesSeo: Record<string, {
     h1: TranslatableString;

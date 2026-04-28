@@ -23,7 +23,6 @@ export default function DashboardSidebar({ currentLocale, handleLogout, setSideb
     { href: `/${currentLocale}/dashboard/key-clients`, icon: <FiStar />, label: 'أهم العملاء' },
     { href: `/${currentLocale}/dashboard/branches`, icon: <FiMap />, label: 'إدارة الفروع' },
     { href: `/${currentLocale}/dashboard/bookings`, icon: <FiList />, label: 'إدارة الحجوزات' },
-    { href: `/${currentLocale}/dashboard/payments`, icon: <FiCreditCard />, label: 'مراجعة المدفوعات' },
     { href: `/${currentLocale}/dashboard/contracts`, icon: <FiFileText />, label: 'التعاقدات' },
   ];
 

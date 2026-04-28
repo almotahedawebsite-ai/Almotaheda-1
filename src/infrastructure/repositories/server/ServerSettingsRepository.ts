@@ -49,8 +49,6 @@ export class ServerSettingsRepository extends ServerBaseRepository<SiteSettings>
           aboutContent: { ar: 'شركة المتحدة لخدمات النظافة', en: 'Al-Motaheda Cleaning Service' },
           aboutImage: '',
           whatsappCta: '',
-          instapayQrImage: '',
-          eWalletNumber: '',
           pagesSeo: {},
           enableDarkMode: false,
           enableMultiLanguage: false,

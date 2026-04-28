@@ -5,7 +5,7 @@ import { db } from '@/infrastructure/firebase/config';
 import { collection, getCountFromServer } from 'firebase/firestore';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { FiSmile, FiLayers, FiStar, FiMap, FiList, FiCreditCard, FiFileText, FiInbox, FiUsers, FiBarChart2, FiZap, FiPenTool, FiSettings, FiArrowLeft } from 'react-icons/fi';
+import { FiSmile, FiLayers, FiStar, FiMap, FiList, FiFileText, FiInbox, FiUsers, FiBarChart2, FiZap, FiPenTool, FiSettings, FiArrowLeft } from 'react-icons/fi';
 
 export default function DashboardHome() {
   const params = useParams();
@@ -16,7 +16,6 @@ export default function DashboardHome() {
     keyClients: 0,
     branches: 0,
     bookings: 0,
-    payments: 0,
     contracts: 0,
     messages: 0,
     admins: 0,
@@ -26,12 +25,11 @@ export default function DashboardHome() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [svcSnap, cliSnap, brSnap, bookSnap, paySnap, contSnap, msgSnap, admSnap] = await Promise.all([
+        const [svcSnap, cliSnap, brSnap, bookSnap, contSnap, msgSnap, admSnap] = await Promise.all([
           getCountFromServer(collection(db, 'services')),
           getCountFromServer(collection(db, 'key_clients')),
           getCountFromServer(collection(db, 'branches')),
           getCountFromServer(collection(db, 'bookings')),
-          getCountFromServer(collection(db, 'payments')),
           getCountFromServer(collection(db, 'contracts')),
           getCountFromServer(collection(db, 'messages')),
           getCountFromServer(collection(db, 'admins')),
@@ -42,7 +40,6 @@ export default function DashboardHome() {
           keyClients: cliSnap.data().count,
           branches: brSnap.data().count,
           bookings: bookSnap.data().count,
-          payments: paySnap.data().count,
           contracts: contSnap.data().count,
           messages: msgSnap.data().count,
           admins: admSnap.data().count + 1,
@@ -61,7 +58,6 @@ export default function DashboardHome() {
     { title: 'أهم العملاء', icon: <FiStar />, count: stats.keyClients, link: `/${currentLocale}/dashboard/key-clients`, color: 'bg-amber-500' },
     { title: 'الفروع', icon: <FiMap />, count: stats.branches, link: `/${currentLocale}/dashboard/branches`, color: 'bg-indigo-500' },
     { title: 'الحجوزات', icon: <FiList />, count: stats.bookings, link: `/${currentLocale}/dashboard/bookings`, color: 'bg-green-500' },
-    { title: 'المدفوعات', icon: <FiCreditCard />, count: stats.payments, link: `/${currentLocale}/dashboard/payments`, color: 'bg-purple-500' },
     { title: 'التعاقدات', icon: <FiFileText />, count: stats.contracts, link: `/${currentLocale}/dashboard/contracts`, color: 'bg-orange-500' },
     { title: 'الرسائل', icon: <FiInbox />, count: stats.messages, link: `/${currentLocale}/dashboard/messages`, color: 'bg-rose-500' },
     { title: 'المشرفون', icon: <FiUsers />, count: stats.admins, link: `/${currentLocale}/dashboard/users`, color: 'bg-slate-600' },
@@ -128,9 +124,6 @@ export default function DashboardHome() {
             </Link>
             <Link href={`/${currentLocale}/dashboard/bookings`} className="p-4 bg-gray-50 rounded-2xl border border-gray-100 flex flex-col items-center justify-center gap-2 hover:bg-brand-teal/5 hover:border-brand-teal/20 transition-all font-bold text-gray-600 text-sm">
               <FiList className="text-brand-teal text-xl" /> الحجوزات
-            </Link>
-            <Link href={`/${currentLocale}/dashboard/payments`} className="p-4 bg-gray-50 rounded-2xl border border-gray-100 flex flex-col items-center justify-center gap-2 hover:bg-brand-teal/5 hover:border-brand-teal/20 transition-all font-bold text-gray-600 text-sm">
-              <FiCreditCard className="text-brand-teal text-xl" /> المدفوعات
             </Link>
             <Link href={`/${currentLocale}/dashboard/key-clients`} className="p-4 bg-gray-50 rounded-2xl border border-gray-100 flex flex-col items-center justify-center gap-2 hover:bg-brand-teal/5 hover:border-brand-teal/20 transition-all font-bold text-gray-600 text-sm">
               <FiStar className="text-amber-500 text-xl" /> أهم العملاء

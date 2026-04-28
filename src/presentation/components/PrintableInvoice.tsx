@@ -67,8 +67,6 @@ export default function PrintableInvoice({ booking, companyName, companyPhone, c
               <tr className="bg-brand-navy text-white">
                 <th className="text-right py-3 px-4 text-sm font-bold">الخدمة</th>
                 <th className="text-right py-3 px-4 text-sm font-bold">الحالة</th>
-                <th className="text-right py-3 px-4 text-sm font-bold">طريقة الدفع</th>
-                <th className="text-right py-3 px-4 text-sm font-bold">حالة الدفع</th>
               </tr>
             </thead>
             <tbody>
@@ -78,14 +76,6 @@ export default function PrintableInvoice({ booking, companyName, companyPhone, c
                   {booking.status === 'pending' ? <span className="flex items-center gap-1"><FiClock className="text-amber-500" /> قيد الانتظار</span> :
                    booking.status === 'confirmed' ? <span className="flex items-center gap-1"><FiCheckCircle className="text-green-500" /> مؤكد</span> :
                    booking.status === 'completed' ? <span className="flex items-center gap-1"><FiFlag className="text-blue-500" /> مكتمل</span> : <span className="flex items-center gap-1"><FiXCircle className="text-red-500" /> ملغي</span>}
-                </td>
-                <td className="py-4 px-4 text-sm">
-                  {booking.paymentMethod === 'instapay_qr' ? 'InstaPay QR' : 
-                   booking.paymentMethod === 'e_wallet' ? 'محفظة إلكترونية' : '—'}
-                </td>
-                <td className="py-4 px-4 text-sm font-bold">
-                  {booking.paymentStatus === 'pending' ? <span className="flex items-center gap-1 text-gray-500"><FiClock /> قيد المراجعة</span> :
-                   booking.paymentStatus === 'confirmed' ? <span className="flex items-center gap-1 text-green-600"><FiCheckCircle /> تم التأكيد</span> : <span className="flex items-center gap-1 text-red-600"><FiXCircle /> مرفوض</span>}
                 </td>
               </tr>
             </tbody>

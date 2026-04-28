@@ -104,7 +104,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
               >
                 <FiClipboard className="text-3xl mb-3 flex justify-center w-full group-hover:scale-110 transition-transform" />
                 <h3 className="font-black text-xl mb-1">{locale === 'ar' ? 'احجز خدمتك الآن' : 'Book Your Service Now'}</h3>
-                <p className="text-white/60 text-sm">{locale === 'ar' ? 'نموذج الحجز السريع مع خيارات الدفع الإلكتروني' : 'Quick booking form with electronic payment options'}</p>
+                <p className="text-white/60 text-sm">{locale === 'ar' ? 'نموذج حجز سريع عبر واتساب' : 'Quick booking form via WhatsApp'}</p>
               </Link>
             </div>
 

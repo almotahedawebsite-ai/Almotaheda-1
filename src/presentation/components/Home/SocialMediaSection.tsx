@@ -1,5 +1,6 @@
 import React from 'react';
 import { FiInstagram, FiFacebook, FiTwitter, FiLinkedin, FiYoutube, FiLink } from 'react-icons/fi';
+import { FaTiktok } from 'react-icons/fa';
 
 const getIcon = (platform: string) => {
   const p = platform.toLowerCase();
@@ -8,6 +9,7 @@ const getIcon = (platform: string) => {
   if (p.includes('twitter') || p.includes('x')) return <FiTwitter />;
   if (p.includes('linkedin')) return <FiLinkedin />;
   if (p.includes('youtube')) return <FiYoutube />;
+  if (p.includes('tiktok')) return <FaTiktok />;
   return <FiLink />;
 };
 

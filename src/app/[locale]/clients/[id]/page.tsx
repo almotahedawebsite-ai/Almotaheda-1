@@ -71,10 +71,10 @@ export default async function ClientDetailPage({
           <div className="flex flex-col md:flex-row items-start md:items-center gap-8">
             {/* Logo */}
             <div className="shrink-0">
-              {client.logo ? (
+              {(client.logo || client.image) ? (
                 <div className="w-28 h-28 md:w-36 md:h-36 bg-white rounded-3xl shadow-2xl p-4 flex items-center justify-center">
                   <img
-                    src={client.logo}
+                    src={client.logo || client.image}
                     alt={tField(client.name, locale)}
                     className="w-full h-full object-contain"
                   />
@@ -230,9 +230,9 @@ export default async function ClientDetailPage({
                   href={`/${locale}/clients/${c.id}`}
                   className="group bg-white dark:bg-slate-800 rounded-2xl p-6 border border-gray-100 dark:border-slate-700 hover:border-brand-teal/40 hover:shadow-lg transition-all text-center"
                 >
-                  {c.logo ? (
+                  {(c.logo || c.image) ? (
                     <img
-                      src={c.logo}
+                      src={c.logo || c.image}
                       alt={tField(c.name, locale)}
                       className="w-16 h-16 mx-auto mb-3 object-contain rounded-xl group-hover:scale-105 transition-transform"
                     />

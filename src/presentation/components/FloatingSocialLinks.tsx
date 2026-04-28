@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { FiFacebook, FiInstagram, FiTwitter, FiLinkedin, FiYoutube, FiGlobe } from 'react-icons/fi';
+import { FaTiktok } from 'react-icons/fa';
 
 interface SocialLink {
   platform: string;
@@ -20,6 +21,7 @@ const getPlatformIcon = (platform: string) => {
     case 'twitter': return <FiTwitter className="w-5 h-5" />;
     case 'linkedin': return <FiLinkedin className="w-5 h-5" />;
     case 'youtube': return <FiYoutube className="w-5 h-5" />;
+    case 'tiktok': return <FaTiktok className="w-5 h-5" />;
     default: return <FiGlobe className="w-5 h-5" />;
   }
 };

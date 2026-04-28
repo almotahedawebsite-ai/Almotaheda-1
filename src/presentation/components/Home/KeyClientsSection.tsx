@@ -145,9 +145,9 @@ export default function KeyClientsSection({
                 className="glass rounded-3xl p-8 text-center group hover:bg-white/20 transition-all cursor-pointer"
                 style={{ animationDelay: `${idx * 0.1}s` }}
               >
-                {client.logo ? (
+                {(client.logo || client.image) ? (
                   <img
-                    src={client.logo}
+                    src={client.logo || client.image}
                     alt={tField(client.name, locale)}
                     className="w-20 h-20 mx-auto mb-4 object-contain rounded-2xl"
                   />

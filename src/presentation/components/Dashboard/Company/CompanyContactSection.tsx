@@ -26,11 +26,22 @@ export default function CompanyContactSection({
         </div>
 
         <div>
-          <label className="block text-sm font-bold text-green-700 mb-2">رقم الواتساب (WhatsApp)</label>
+          <label className="block text-sm font-bold text-green-700 mb-2">رقم الواتساب العام (للاستفسارات)</label>
           <input 
             className="w-full p-4 bg-green-50 border-green-200 border rounded-xl focus:ring-2 focus:ring-green-500 outline-none placeholder-green-300" 
             value={settings.contactWhatsapp || ''}
             onChange={e => setSettings({...settings, contactWhatsapp: e.target.value})}
+            placeholder="+201012345678"
+            dir="ltr"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-bold text-teal-700 mb-2">رقم واتساب الحجز (الزر العائم / CTA)</label>
+          <input 
+            className="w-full p-4 bg-teal-50 border-teal-200 border rounded-xl focus:ring-2 focus:ring-teal-500 outline-none placeholder-teal-300" 
+            value={settings.whatsappCta || ''}
+            onChange={e => setSettings({...settings, whatsappCta: e.target.value})}
             placeholder="+201012345678"
             dir="ltr"
           />

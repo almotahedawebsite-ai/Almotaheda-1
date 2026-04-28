@@ -2,20 +2,17 @@
 
 import React, { useEffect, useState } from 'react';
 import { db, auth } from '@/infrastructure/firebase/config';
-import { collection, getDocs, query, where, orderBy, doc, setDoc } from 'firebase/firestore';
+import { collection, getDocs, query, where, orderBy } from 'firebase/firestore';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { useSearchParams, useParams } from 'next/navigation';
 import { Service } from '@/domain/types/service';
 import { tField } from '@/domain/types/settings';
 import { SettingsRepository } from '@/infrastructure/repositories/SettingsRepository';
-import { CloudinaryService } from '@/infrastructure/services/CloudinaryService';
-import { FiClipboard } from 'react-icons/fi';
+import { FiClipboard, FiEdit, FiInfo, FiArrowLeft, FiCheckCircle, FiHome } from 'react-icons/fi';
+import { FaWhatsapp } from 'react-icons/fa';
+import Link from 'next/link';
 
-import DetailsStep from '@/presentation/components/Booking/DetailsStep';
-import PaymentStep from '@/presentation/components/Booking/PaymentStep';
-import ConfirmationStep from '@/presentation/components/Booking/ConfirmationStep';
-
-type BookingStep = 'details' | 'payment' | 'confirmation';
+type BookingStep = 'details' | 'confirmation';
 
 export default function BookingPage() {
   const params = useParams();
@@ -27,9 +24,6 @@ export default function BookingPage() {
   const [services, setServices] = useState<Service[]>([]);
   const [settings, setSettings] = useState<any>({});
   const [step, setStep] = useState<BookingStep>('details');
-  const [submitting, setSubmitting] = useState(false);
-  const [uploadingProof, setUploadingProof] = useState(false);
-  const [bookingId, setBookingId] = useState('');
 
   const [form, setForm] = useState({
     customerName: '',
@@ -37,8 +31,6 @@ export default function BookingPage() {
     customerAddress: '',
     serviceId: preSelectedService,
     notes: '',
-    paymentMethod: '' as '' | 'instapay_qr' | 'e_wallet',
-    paymentProofUrl: '',
   });
 
   useEffect(() => {
@@ -74,83 +66,41 @@ export default function BookingPage() {
 
   const selectedService = services.find(s => s.id === form.serviceId);
 
-  const handleSubmitBooking = async () => {
+  const handleSubmitToWhatsApp = () => {
     if (!form.customerName || !form.customerPhone || !form.serviceId) {
-      alert('يرجى ملء جميع الحقول المطلوبة');
-      return;
-    }
-    setStep('payment');
-  };
-
-  const handleProofUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploadingProof(true);
-    try {
-      const url = await CloudinaryService.uploadImage(file);
-      setForm(prev => ({ ...prev, paymentProofUrl: url }));
-    } catch (err) {
-      alert('فشل رفع صورة الإثبات. تأكد من إعداد Cloudinary.');
-    }
-    setUploadingProof(false);
-  };
-
-  const handleFinalSubmit = async () => {
-    if (!form.paymentMethod) {
-      alert('يرجى اختيار طريقة الدفع');
-      return;
-    }
-    if (!form.paymentProofUrl) {
-      alert('يرجى رفع صورة إثبات الدفع');
+      alert(locale === 'ar' ? 'يرجى ملء جميع الحقول المطلوبة' : 'Please fill all required fields');
       return;
     }
 
-    setSubmitting(true);
-    try {
-      const id = `booking-${Date.now()}`;
-      const serviceName = selectedService ? tField(selectedService.name, 'ar') : '';
+    const serviceName = selectedService ? tField(selectedService.name, 'ar') : '';
+    const whatsappNumber = (settings.contactWhatsapp || settings.whatsappCta || '').replace(/[^0-9]/g, '');
 
-      const bookingData = {
-        id,
-        customerName: form.customerName,
-        customerPhone: form.customerPhone,
-        customerAddress: form.customerAddress,
-        customerUid: user?.uid || '',
-        serviceId: form.serviceId,
-        serviceName,
-        notes: form.notes,
-        status: 'pending',
-        paymentStatus: 'pending',
-        paymentProofUrl: form.paymentProofUrl,
-        paymentMethod: form.paymentMethod,
-        createdAt: new Date().toISOString(),
-      };
-
-      await setDoc(doc(db, 'bookings', id), bookingData);
-
-      // Also create a payment record
-      const paymentId = `payment-${Date.now()}`;
-      await setDoc(doc(db, 'payments', paymentId), {
-        id: paymentId,
-        bookingId: id,
-        customerName: form.customerName,
-        customerPhone: form.customerPhone,
-        amount: '',
-        method: form.paymentMethod,
-        proofImageUrl: form.paymentProofUrl,
-        status: 'pending',
-        confirmedBy: '',
-        confirmedAt: '',
-        createdAt: new Date().toISOString(),
-      });
-
-      setBookingId(id);
-      setStep('confirmation');
-    } catch (err) {
-      console.error(err);
-      alert('حدث خطأ أثناء إرسال الحجز');
+    if (!whatsappNumber) {
+      alert(locale === 'ar' ? 'عذراً، رقم الواتساب غير متاح حالياً' : 'Sorry, WhatsApp number is not available');
+      return;
     }
-    setSubmitting(false);
+
+    // Build Arabic WhatsApp message
+    const message = [
+      '🏢 *طلب حجز خدمة — المتحدة*',
+      '',
+      `👤 *الاسم:* ${form.customerName}`,
+      `📱 *الهاتف:* ${form.customerPhone}`,
+      form.customerAddress ? `📍 *العنوان:* ${form.customerAddress}` : '',
+      `🧹 *الخدمة المطلوبة:* ${serviceName}`,
+      form.notes ? `📝 *ملاحظات:* ${form.notes}` : '',
+      '',
+      '⏳ في انتظار التأكيد من فريق المتحدة',
+    ].filter(Boolean).join('\n');
+
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+
+    // Show confirmation step first
+    setStep('confirmation');
+
+    // Open WhatsApp in new tab
+    window.open(whatsappUrl, '_blank');
   };
 
   return (
@@ -170,26 +120,25 @@ export default function BookingPage() {
 
           {/* Progress Steps */}
           <div className="flex items-center justify-center gap-2 mt-8 max-w-md mx-auto">
-            {(['details', 'payment', 'confirmation'] as BookingStep[]).map((s, idx) => (
+            {(['details', 'confirmation'] as BookingStep[]).map((s, idx) => (
               <React.Fragment key={s}>
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-sm transition-all ${
                   step === s ? 'bg-white text-brand-navy scale-110' : 
-                  (['details', 'payment', 'confirmation'].indexOf(step) > idx) ? 'bg-brand-teal text-white' : 'bg-white/20 text-white/60'
+                  (['details', 'confirmation'].indexOf(step) > idx) ? 'bg-brand-teal text-white' : 'bg-white/20 text-white/60'
                 }`}>
                   {idx + 1}
                 </div>
-                {idx < 2 && (
+                {idx < 1 && (
                   <div className={`flex-1 h-1 rounded-full transition-all ${
-                    (['details', 'payment', 'confirmation'].indexOf(step) > idx) ? 'bg-brand-teal' : 'bg-white/20'
+                    (['details', 'confirmation'].indexOf(step) > idx) ? 'bg-brand-teal' : 'bg-white/20'
                   }`} />
                 )}
               </React.Fragment>
             ))}
           </div>
           <div className="flex items-center justify-between max-w-md mx-auto mt-2 text-xs text-white/60 font-bold">
-            <span>البيانات</span>
-            <span>الدفع</span>
-            <span>التأكيد</span>
+            <span>{locale === 'ar' ? 'البيانات' : 'Details'}</span>
+            <span>{locale === 'ar' ? 'التأكيد' : 'Confirmation'}</span>
           </div>
         </div>
       </section>
@@ -199,45 +148,139 @@ export default function BookingPage() {
 
           {/* ============ STEP 1: DETAILS ============ */}
           {step === 'details' && (
-            <DetailsStep 
-              form={form}
-              setForm={setForm}
-              user={user}
-              services={services}
-              locale={locale}
-              onSubmit={handleSubmitBooking}
-            />
+            <div className="bg-gray-50 dark:bg-slate-800 p-8 md:p-10 rounded-3xl border border-gray-100 dark:border-slate-700 space-y-6">
+              <h2 className="text-2xl font-black text-gray-900 dark:text-white mb-2 flex items-center gap-2"><FiEdit /> {locale === 'ar' ? 'بيانات الحجز' : 'Booking Details'}</h2>
+
+              {!user && (
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800/30 p-4 rounded-2xl">
+                  <div className="flex items-start gap-2"><FiInfo className="text-blue-700 dark:text-blue-300 mt-1 shrink-0" /><p className="text-sm text-blue-700 dark:text-blue-300 font-bold">
+                    {locale === 'ar' ? (
+                      <>يمكنك <Link href={`/${locale}/login`} className="underline">تسجيل الدخول بحساب جوجل</Link> لملء بياناتك تلقائياً</>
+                    ) : (
+                      <>You can <Link href={`/${locale}/login`} className="underline">sign in with Google</Link> to auto-fill your details</>
+                    )}
+                  </p></div>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">{locale === 'ar' ? 'الاسم الكامل *' : 'Full Name *'}</label>
+                <input
+                  type="text"
+                  value={form.customerName}
+                  onChange={(e) => setForm(prev => ({ ...prev, customerName: e.target.value }))}
+                  className="w-full border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-brand-teal/20 focus:border-brand-teal outline-none transition-all text-gray-900 dark:text-white"
+                  placeholder={locale === 'ar' ? 'أدخل اسمك الكامل' : 'Enter your full name'}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">{locale === 'ar' ? 'رقم الهاتف *' : 'Phone Number *'}</label>
+                <input
+                  type="tel"
+                  value={form.customerPhone}
+                  onChange={(e) => setForm(prev => ({ ...prev, customerPhone: e.target.value }))}
+                  className="w-full border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-brand-teal/20 focus:border-brand-teal outline-none transition-all text-gray-900 dark:text-white"
+                  dir="ltr"
+                  placeholder="01xxxxxxxxx"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">{locale === 'ar' ? 'العنوان' : 'Address'}</label>
+                <input
+                  type="text"
+                  value={form.customerAddress}
+                  onChange={(e) => setForm(prev => ({ ...prev, customerAddress: e.target.value }))}
+                  className="w-full border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-brand-teal/20 focus:border-brand-teal outline-none transition-all text-gray-900 dark:text-white"
+                  placeholder={locale === 'ar' ? 'أدخل العنوان بالتفصيل' : 'Enter your detailed address'}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">{locale === 'ar' ? 'الخدمة المطلوبة *' : 'Required Service *'}</label>
+                <select
+                  value={form.serviceId}
+                  onChange={(e) => setForm(prev => ({ ...prev, serviceId: e.target.value }))}
+                  className="w-full border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-brand-teal/20 focus:border-brand-teal outline-none transition-all text-gray-900 dark:text-white"
+                >
+                  <option value="">{locale === 'ar' ? '— اختر الخدمة —' : '— Select Service —'}</option>
+                  {services.map(s => (
+                    <option key={s.id} value={s.id}>{tField(s.name, locale)}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">{locale === 'ar' ? 'ملاحظات إضافية' : 'Additional Notes'}</label>
+                <textarea
+                  value={form.notes}
+                  onChange={(e) => setForm(prev => ({ ...prev, notes: e.target.value }))}
+                  className="w-full border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-brand-teal/20 focus:border-brand-teal outline-none transition-all text-gray-900 dark:text-white"
+                  rows={3}
+                  placeholder={locale === 'ar' ? 'أي تفاصيل إضافية تريد إخبارنا بها...' : 'Any additional details...'}
+                />
+              </div>
+
+              <button
+                onClick={handleSubmitToWhatsApp}
+                className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-4 rounded-2xl font-black text-lg transition-all hover:shadow-xl hover:shadow-green-500/20 flex items-center justify-center gap-3"
+              >
+                <FaWhatsapp className="text-2xl" /> {locale === 'ar' ? 'إرسال عبر واتساب' : 'Send via WhatsApp'}
+              </button>
+            </div>
           )}
 
-          {/* ============ STEP 2: PAYMENT ============ */}
-          {step === 'payment' && (
-            <PaymentStep 
-              form={form}
-              setForm={setForm}
-              settings={settings}
-              submitting={submitting}
-              uploadingProof={uploadingProof}
-              selectedService={selectedService}
-              locale={locale}
-              onProofUpload={handleProofUpload}
-              onSubmit={handleFinalSubmit}
-              onBack={() => setStep('details')}
-            />
-          )}
-
-          {/* ============ STEP 3: CONFIRMATION ============ */}
+          {/* ============ STEP 2: CONFIRMATION ============ */}
           {step === 'confirmation' && (
-            <ConfirmationStep 
-              form={form}
-              bookingId={bookingId}
-              settings={settings}
-              selectedService={selectedService}
-              locale={locale}
-            />
+            <div className="text-center space-y-8">
+              <div className="bg-green-50 dark:bg-green-900/20 p-12 rounded-3xl border border-green-100 dark:border-green-800/30">
+                <div className="w-24 h-24 bg-green-100 dark:bg-green-800/30 rounded-full flex items-center justify-center text-5xl mx-auto mb-6 animate-scale-in text-green-600">
+                  <FiCheckCircle />
+                </div>
+                <h2 className="text-3xl font-black text-green-800 dark:text-green-300 mb-4">
+                  {locale === 'ar' ? 'تم إرسال طلبك!' : 'Request Sent!'}
+                </h2>
+                <p className="text-green-600 dark:text-green-500 max-w-md mx-auto">
+                  {locale === 'ar'
+                    ? 'تم توجيهك إلى واتساب لإرسال طلب الحجز. إذا لم يتم فتح واتساب تلقائياً، اضغط الزر أدناه.'
+                    : 'You have been redirected to WhatsApp. If it did not open automatically, click the button below.'}
+                </p>
+              </div>
+
+              <div className="bg-gray-50 dark:bg-slate-800 p-8 rounded-2xl border border-gray-100 dark:border-slate-700 text-right">
+                <h3 className="font-black text-gray-900 dark:text-white mb-4 text-lg flex items-center gap-2"><FiClipboard /> {locale === 'ar' ? 'ملخص طلبك' : 'Request Summary'}</h3>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between"><span className="text-gray-500">{locale === 'ar' ? 'الاسم:' : 'Name:'}</span> <span className="font-bold">{form.customerName}</span></div>
+                  <div className="flex justify-between"><span className="text-gray-500">{locale === 'ar' ? 'الهاتف:' : 'Phone:'}</span> <span className="font-bold" dir="ltr">{form.customerPhone}</span></div>
+                  <div className="flex justify-between"><span className="text-gray-500">{locale === 'ar' ? 'الخدمة:' : 'Service:'}</span> <span className="font-bold text-brand-teal">{selectedService ? tField(selectedService.name, locale) : ''}</span></div>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link
+                  href={`/${locale}`}
+                  className="bg-brand-navy text-white px-8 py-4 rounded-2xl font-bold transition-all hover:bg-brand-teal"
+                >
+                  <div className="flex items-center gap-2"><FiHome /> {locale === 'ar' ? 'العودة للرئيسية' : 'Back to Home'}</div>
+                </Link>
+                {(settings.whatsappCta || settings.contactWhatsapp) && (
+                  <a
+                    href={`https://wa.me/${(settings.contactWhatsapp || settings.whatsappCta || '').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                      `🏢 *طلب حجز خدمة — المتحدة*\n\n👤 *الاسم:* ${form.customerName}\n📱 *الهاتف:* ${form.customerPhone}\n${form.customerAddress ? `📍 *العنوان:* ${form.customerAddress}\n` : ''}🧹 *الخدمة:* ${selectedService ? tField(selectedService.name, 'ar') : ''}\n${form.notes ? `📝 *ملاحظات:* ${form.notes}\n` : ''}`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-2xl font-bold transition-all inline-flex items-center gap-2 shadow-lg shadow-green-500/20"
+                  >
+                    <FaWhatsapp className="text-xl" /> {locale === 'ar' ? 'فتح واتساب مرة أخرى' : 'Open WhatsApp Again'}
+                  </a>
+                )}
+              </div>
+            </div>
           )}
         </div>
       </section>
     </div>
   );
 }
-

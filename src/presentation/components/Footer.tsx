@@ -7,7 +7,19 @@ import { auth, db } from '@/infrastructure/firebase/config';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
 import { Service } from '@/domain/types/service';
-import { FiCalendar, FiUser, FiLogIn, FiPhone, FiMail, FiMapPin, FiMessageSquare } from 'react-icons/fi';
+import { FiCalendar, FiUser, FiLogIn, FiPhone, FiMail, FiMapPin, FiMessageSquare, FiFacebook, FiInstagram, FiTwitter, FiLinkedin, FiYoutube, FiGlobe } from 'react-icons/fi';
+import { FaTiktok } from 'react-icons/fa';
+
+const getPlatformIcon = (platform: string) => {
+  const p = platform.toLowerCase();
+  if (p.includes('facebook')) return <FiFacebook className="w-5 h-5" />;
+  if (p.includes('instagram')) return <FiInstagram className="w-5 h-5" />;
+  if (p.includes('twitter') || p.includes('x')) return <FiTwitter className="w-5 h-5" />;
+  if (p.includes('linkedin')) return <FiLinkedin className="w-5 h-5" />;
+  if (p.includes('youtube')) return <FiYoutube className="w-5 h-5" />;
+  if (p.includes('tiktok')) return <FaTiktok className="w-5 h-5" />;
+  return <FiGlobe className="w-5 h-5" />;
+};
 
 export default function Footer({ settings, currentLocale = 'ar' }: { settings: Partial<SiteSettings>, currentLocale?: string }) {
   const [user, setUser] = useState<User | null>(null);
@@ -149,15 +161,7 @@ export default function Footer({ settings, currentLocale = 'ar' }: { settings: P
               <div className="flex gap-3 pt-4 flex-wrap">
                 {settings.socialLinks.map((link, idx) => (
                   <a key={idx} href={link.url} target="_blank" className="w-10 h-10 rounded-xl bg-white/10 hover:bg-brand-teal flex items-center justify-center transition-all hover:-translate-y-1" title={link.platform}>
-                    {link.icon ? (
-                      link.icon.startsWith('http') ? (
-                        <img src={link.icon} alt={link.platform} className="w-5 h-5 object-contain invert opacity-70" />
-                      ) : (
-                        <span dangerouslySetInnerHTML={{ __html: link.icon }} className="flex items-center justify-center w-5 h-5 fill-current"></span>
-                      )
-                    ) : (
-                      <span className="text-xs uppercase font-bold">{link.platform.substring(0, 2)}</span>
-                    )}
+                    {getPlatformIcon(link.platform)}
                   </a>
                 ))}
               </div>
