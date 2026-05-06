@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { TranslatableString } from '@/domain/types/settings';
 import { FiType, FiGlobe } from 'react-icons/fi';
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { ServerSettingsRepository } from '@/infrastructure/repositories/server/ServerSettingsRepository';
 import ContactForm from '@/presentation/components/ContactForm';
 import { tField } from '@/domain/types/settings';
@@ -11,7 +10,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
   const settings = await settingsRepo.getGlobalSettings();
 
   return (
-    <div className="pt-20 animate-fade-in-up">
+    <div className="animate-fade-in-up">
       {/* Hero */}
       <section className="py-20 flex items-center justify-center text-white text-center relative overflow-hidden min-h-[40vh]">
         {/* Background Layering */}

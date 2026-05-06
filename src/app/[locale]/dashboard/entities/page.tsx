@@ -5,7 +5,7 @@ import { db } from '@/infrastructure/firebase/config';
 import { BaseRepository } from '@/infrastructure/repositories/BaseRepository';
 import { SettingsRepository } from '@/infrastructure/repositories/SettingsRepository';
 import { CloudinaryService } from '@/infrastructure/services/CloudinaryService';
-import { BaseEntity, EntityType } from '@/domain/types/entity';
+import { BaseEntity } from '@/domain/types/entity';
 import { TranslatableString } from '@/domain/types/settings';
 import { EntityTypesConfig } from '@/config/entityTypes';
 import { TranslatableField } from '@/presentation/components/Dashboard/TranslatableField';
@@ -76,7 +76,7 @@ export default function EntitiesDashboard() {
       const url = await CloudinaryService.uploadImage(file);
       const newFields = [...(formData.customFields || [])];
       const idx = newFields.findIndex(f => f.fieldId === fieldId);
-      if (idx > -1) newFields[idx].value = url;
+      if (idx > -1) newFields[idx]!.value = url;
       else newFields.push({ fieldId, value: url });
 
       setFormData({ ...formData, customFields: newFields });
@@ -88,7 +88,7 @@ export default function EntitiesDashboard() {
   const handleFieldChange = (fieldId: string, value: string | TranslatableString) => {
     const newFields = [...(formData.customFields || [])];
     const idx = newFields.findIndex(f => f.fieldId === fieldId);
-    if (idx > -1) newFields[idx].value = value;
+    if (idx > -1) newFields[idx]!.value = value;
     else newFields.push({ fieldId, value });
     setFormData({ ...formData, customFields: newFields });
   };

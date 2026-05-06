@@ -1,4 +1,4 @@
-import { ModuleConfig, registry } from '../../core/registry/ModuleRegistry';
+import { ModuleConfig } from '../../core/registry/ModuleRegistry';
 import { CoursesSchema } from './courses.schema';
 import { initCoursesEvents } from './courses.events';
 

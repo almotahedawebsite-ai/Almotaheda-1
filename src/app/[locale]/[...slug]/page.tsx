@@ -4,7 +4,7 @@ import { ServerBaseRepository } from '@/infrastructure/repositories/server/Serve
 import { ServerEntityRepository } from '@/infrastructure/repositories/server/ServerEntityRepository';
 import { EntityRenderer } from '@/presentation/components/EntityRenderer';
 import { EntityTypesConfig } from '@/config/entityTypes';
-import { ServerSettingsRepository } from '@/infrastructure/repositories/server/ServerSettingsRepository';
+
 
 export default async function DynamicEntityPage({ 
   params 
@@ -16,8 +16,6 @@ export default async function DynamicEntityPage({
   const { locale, slug } = resolvedParams;
   const slugPath = slug.join('/');
 
-  const repo = new ServerSettingsRepository();
-  const settings = await repo.getGlobalSettings();
 
   const slugRepo = new ServerBaseRepository<any>(adminDb, 'slugs');
   const slugInfo = await slugRepo.find([

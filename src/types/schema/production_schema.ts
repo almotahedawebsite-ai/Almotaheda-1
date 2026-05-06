@@ -1,4 +1,4 @@
-import { BaseEntity, EntityType, CustomFieldDefinition } from '@/domain/types';
+import { BaseEntity } from '@/domain/types';
 
 /**
  * 1. DATABASE ARCHITECTURE (FIRESTORE)

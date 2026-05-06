@@ -43,8 +43,8 @@ export default async function DashboardLayout({
     }
 
     // 4. Fetch settings for the client layout
-    const settingsRepo = new ServerSettingsRepository();
-    const settings = await settingsRepo.getGlobalSettings();
+    const repo = new ServerSettingsRepository();
+    await repo.getGlobalSettings();
 
     // 5. Prepare user data for the client layout
     const user = {
@@ -56,15 +56,17 @@ export default async function DashboardLayout({
     return (
       <DashboardClientLayout 
         user={user} 
-        settings={settings} 
         currentLocale={locale}
       >
         {children}
       </DashboardClientLayout>
     );
 
-  } catch (error) {
-    console.error('Dashboard Auth Error:', error);
+  } catch (error: any) {
+    // If it's just an expired cookie, don't spam the server logs with a huge stack trace
+    if (error?.code !== 'auth/session-cookie-expired' && error?.code !== 'auth/session-cookie-revoked') {
+      console.error('Dashboard Auth Error:', error);
+    }
     redirect(`/${locale}/login`);
   }
 }

@@ -1,4 +1,3 @@
-import React from 'react';
 import Link from 'next/link';
 import { ServerKeyClientRepository } from '@/infrastructure/repositories/server/ServerKeyClientRepository';
 import { tField } from '@/domain/types/settings';
@@ -6,7 +5,7 @@ import { notFound } from 'next/navigation';
 import {
   FiArrowLeft, FiArrowRight, FiBriefcase, FiStar, FiCheckCircle, FiAward,
 } from 'react-icons/fi';
-import { MdOutlineHotel, MdOutlineAccountBalance, MdOutlineLocationCity } from 'react-icons/md';
+
 
 // ── Category labels ────────────────────────────────────────────────────────────
 const CATEGORY_LABELS: Record<string, { ar: string; en: string; color: string }> = {
@@ -41,7 +40,7 @@ export default async function ClientDetailPage({
   const BackIcon = isRtl ? FiArrowRight : FiArrowLeft;
 
   return (
-    <div className="pt-20 animate-fade-in-up" dir={isRtl ? 'rtl' : 'ltr'}>
+    <div className="animate-fade-in-up" dir={isRtl ? 'rtl' : 'ltr'}>
       {/* ── Hero ── */}
       <section className="relative overflow-hidden bg-gradient-to-br from-brand-navy via-slate-900 to-brand-dark text-white">
         {/* Background blobs */}
@@ -244,11 +243,11 @@ export default async function ClientDetailPage({
                   <h3 className="font-bold text-gray-900 dark:text-white group-hover:text-brand-teal transition-colors text-sm leading-tight">
                     {tField(c.name, locale)}
                   </h3>
-                  {CATEGORY_LABELS[c.category] && (
-                    <span className={`inline-block mt-2 text-xs font-bold px-2 py-0.5 rounded-full ${CATEGORY_LABELS[c.category].color}`}>
-                      {isRtl ? CATEGORY_LABELS[c.category].ar : CATEGORY_LABELS[c.category].en}
+                  {CATEGORY_LABELS[c.category] ? (
+                    <span className={`inline-block mt-2 text-xs font-bold px-2 py-0.5 rounded-full ${CATEGORY_LABELS[c.category]?.color}`}>
+                      {isRtl ? CATEGORY_LABELS[c.category]?.ar : CATEGORY_LABELS[c.category]?.en}
                     </span>
-                  )}
+                  ) : null}
                 </Link>
               ))}
             </div>

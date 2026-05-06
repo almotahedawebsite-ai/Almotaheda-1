@@ -1,4 +1,3 @@
-import React from 'react';
 
 export const CTABlock = ({ data }: { data: any }) => (
   <section className="py-12 bg-indigo-600">

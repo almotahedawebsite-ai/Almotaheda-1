@@ -1,33 +1,40 @@
-import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { tField } from '@/domain/types/settings';
-import { FiCalendar, FiArrowLeft } from 'react-icons/fi';
+import { FiArrowLeft, FiPhone } from 'react-icons/fi';
 
 export default function HeroSection({ settings, locale }: { settings: any; locale: string }) {
+  const heroImage = settings.heroImage || 'https://res.cloudinary.com/dsr72hebx/image/upload/v1775240899/hero_hhzeus.jpg';
+
   return (
     <section className="relative w-full min-h-[90vh] flex items-center justify-center overflow-hidden bg-brand-navy" id="hero-section">
-      {/* Background Image - Full Visibility */}
-      <img 
-        src={settings.heroImage || 'https://res.cloudinary.com/dsr72hebx/image/upload/v1775240899/hero_hhzeus.jpg'} 
-        className="absolute inset-0 w-full h-full object-cover z-0 opacity-100" 
-        alt={tField(settings.siteName, locale) || 'المتحدة'} 
+      {/* Background Image — Using Next.js Image for automatic WebP/AVIF, responsive sizing, and priority loading */}
+      <Image
+        src={heroImage}
+        alt={tField(settings.siteName, locale) || 'المتحدة لخدمات النظافة'}
+        fill
+        priority
+        quality={75}
+        sizes="100vw"
+        className="object-cover z-0"
+        placeholder="empty"
       />
 
       {/* Soft Brand Color Tint */}
-      <div className="absolute inset-0 hero-gradient opacity-40 z-10 mix-blend-multiply" />
+      <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(10,36,99,0.95)_0%,rgba(10,36,99,0.7)_40%,rgba(62,146,204,0.4)_100%)] opacity-40 z-10 mix-blend-multiply" />
 
       {/* Base Dark Overlay for Perfect Text Contrast */}
       <div className="absolute inset-0 bg-gradient-to-b from-brand-navy/40 via-brand-navy/30 to-brand-navy z-10" />
 
-      {/* Animated background shapes */}
+      {/* Animated background shapes — using will-change for GPU acceleration */}
       <div className="absolute inset-0 z-10 overflow-hidden mix-blend-screen opacity-50 pointer-events-none">
-        <div className="absolute -top-20 -right-20 w-96 h-96 bg-brand-teal/30 rounded-full blur-3xl animate-float" />
-        <div className="absolute -bottom-40 -left-20 w-[500px] h-[500px] bg-brand-teal/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '1.5s' }} />
+        <div className="absolute -top-20 -right-20 w-96 h-96 bg-brand-teal/30 rounded-full blur-3xl animate-float will-change-transform" />
+        <div className="absolute -bottom-40 -left-20 w-[500px] h-[500px] bg-brand-teal/20 rounded-full blur-3xl animate-float will-change-transform" style={{ animationDelay: '1.5s' }} />
       </div>
 
       <div className="relative z-20 text-center px-4 max-w-5xl mx-auto space-y-4 sm:space-y-6 md:space-y-8 pt-10 sm:pt-14 md:pt-20">
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-1.5 sm:px-5 sm:py-2 text-white/90 text-xs sm:text-sm font-bold animate-fade-in-down max-w-xs sm:max-w-none mx-auto">
+        <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-3 py-1.5 sm:px-5 sm:py-2 text-white/90 text-xs sm:text-sm font-bold animate-fade-in-down max-w-xs sm:max-w-none mx-auto">
           <span className="w-2 h-2 flex-shrink-0 bg-green-400 rounded-full animate-pulse"></span>
           <span className="truncate sm:whitespace-normal">{locale === 'ar' ? 'نخدم القطاع السكني والتجاري والصناعي والحكومي' : 'Serving residential, commercial, industrial & government sectors'}</span>
         </div>
@@ -47,16 +54,17 @@ export default function HeroSection({ settings, locale }: { settings: any; local
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-          <Link
-            href={`/${locale}/booking`}
+          <a
+            href={`tel:${settings.contactPhone || '+201000000000'}`}
             className="group bg-white text-brand-navy hover:bg-brand-teal hover:text-white px-6 py-3 sm:px-10 sm:py-4 rounded-2xl font-black text-base sm:text-lg transition-all shadow-2xl shadow-black/20 hover:shadow-brand-teal/30 inline-flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-center"
             id="hero-cta-book"
+            dir="ltr"
           >
-            <FiCalendar className="group-hover:scale-110 transition-transform" /> {locale === 'ar' ? 'احجز خدمتك الآن' : 'Book Your Service'}
-          </Link>
+            <FiPhone className="group-hover:scale-110 transition-transform" /> <span>{locale === 'ar' ? 'اتصل الآن' : 'Call Now'}</span>
+          </a>
           <Link
             href={`/${locale}/services`}
-            className="glass text-white hover:bg-white/20 px-6 py-3 sm:px-10 sm:py-4 rounded-2xl font-bold text-base sm:text-lg transition-all inline-flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-center"
+            className="bg-white/10 border border-white/15 text-white hover:bg-white/20 px-6 py-3 sm:px-10 sm:py-4 rounded-2xl font-bold text-base sm:text-lg transition-all inline-flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-center"
             id="hero-cta-services"
           >
             <span className="flex items-center justify-center gap-2">{locale === 'ar' ? 'استكشف خدماتنا' : 'Explore Services'} <FiArrowLeft /></span>
@@ -73,7 +81,7 @@ export default function HeroSection({ settings, locale }: { settings: any; local
           ].map((stat, idx) => (
             <div
               key={idx}
-              className="glass rounded-xl sm:rounded-2xl p-2.5 sm:p-4 text-center group hover:bg-white/20 transition-all cursor-default"
+              className="bg-white/10 border border-white/15 rounded-xl sm:rounded-2xl p-2.5 sm:p-4 text-center group hover:bg-white/20 transition-all cursor-default"
             >
               <p className="text-xl sm:text-2xl md:text-3xl font-black text-white group-hover:text-brand-teal transition-colors">{stat.num}</p>
               <p className="text-[10px] sm:text-xs text-white/60 font-bold mt-1">{stat.label}</p>

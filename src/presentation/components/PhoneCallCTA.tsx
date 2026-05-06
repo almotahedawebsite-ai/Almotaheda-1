@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import { FiPhoneCall } from 'react-icons/fi';
 
 interface PhoneCallCTAProps {
   phoneNumber: string;
@@ -16,18 +16,12 @@ export default function PhoneCallCTA({ phoneNumber, locale = 'ar' }: PhoneCallCT
   return (
     <a
       href={`tel:${cleanNumber}`}
-      className="phone-float group"
+      className="fixed bottom-[76px] right-4 md:bottom-[96px] md:right-6 z-[9999] w-[50px] h-[50px] md:w-[60px] md:h-[60px] rounded-full bg-brand-navy text-white flex items-center justify-center shadow-[0_4px_20px_rgba(10,36,99,0.45),0_0_0_2px_rgba(255,255,255,0.5)] transition-all duration-300 hover:scale-110 hover:shadow-[0_6px_30px_rgba(10,36,99,0.65),0_0_0_2px_rgba(255,255,255,0.8)] hover:bg-brand-teal hover:z-[10000] cursor-pointer group no-underline"
       aria-label={label}
       id="phone-cta-float"
     >
       {/* Phone icon */}
-      <svg
-        viewBox="0 0 32 32"
-        className="w-8 h-8 fill-current transition-transform group-hover:scale-110 group-hover:rotate-12"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path d="M27.308 20.649c-1.01-.997-3.466-2.585-4.7-3.245-.901-.48-1.557-.373-2.124.195-.415.414-.83.838-1.227 1.268-.282.31-.576.358-.94.195-.937-.43-2.524-1.434-3.949-2.862-1.426-1.427-2.38-2.97-2.807-3.918-.157-.36-.107-.656.203-.938.43-.393.857-.806 1.271-1.22.572-.573.674-1.23.194-2.13-.664-1.242-2.25-3.697-3.244-4.7-.596-.594-1.205-.594-1.801-.17-.633.447-1.234.963-1.82 1.494-.885.802-1.404 1.788-1.475 2.986-.12 2.044.682 4.294 2.393 6.745 1.699 2.43 3.455 4.232 5.937 5.936 2.45 1.712 4.7 2.513 6.743 2.393 1.199-.07 2.185-.591 2.987-1.476.53-.586 1.048-1.187 1.493-1.82.422-.596.424-1.206-.169-1.8z"/>
-      </svg>
+      <FiPhoneCall className="w-[24px] h-[24px] md:w-8 md:h-8 transition-transform group-hover:scale-110 group-hover:rotate-12" />
 
       {/* Tooltip */}
       <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 bg-gray-900 text-white text-xs font-bold py-2 px-4 rounded-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-xl flex items-center gap-2">

@@ -1,7 +1,9 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import {  Dispatch, SetStateAction  } from 'react';
 import Link from 'next/link';
 import { User } from 'firebase/auth';
 import { FiGrid, FiUser, FiLogIn, FiCalendar } from 'react-icons/fi';
+import DarkModeToggle from '../DarkModeToggle';
+import LanguageSwitcher from '../LanguageSwitcher';
 
 interface MobileSidebarProps {
   menuOpen: boolean;
@@ -78,6 +80,14 @@ export default function MobileSidebar({
             <FiLogIn className="text-brand-teal" /> {t.login}
           </Link>
         )}
+        
+        <div className="flex items-center justify-between pt-4 mt-2 border-t border-gray-100 dark:border-slate-800">
+          <div className="text-gray-600 dark:text-gray-400 font-bold text-sm">{currentLocale === 'ar' ? 'الإعدادات' : 'Settings'}</div>
+          <div className="flex gap-2">
+            <LanguageSwitcher currentLocale={currentLocale} />
+            <DarkModeToggle />
+          </div>
+        </div>
       </div>
     </div>
   );

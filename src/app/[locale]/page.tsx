@@ -1,10 +1,10 @@
-import React from 'react';
 import { ServerSettingsRepository } from '@/infrastructure/repositories/server/ServerSettingsRepository';
 import { ServerServiceRepository } from '@/infrastructure/repositories/server/ServerServiceRepository';
 import { ServerKeyClientRepository } from '@/infrastructure/repositories/server/ServerKeyClientRepository';
 import { ServerBranchRepository } from '@/infrastructure/repositories/server/ServerBranchRepository';
 
 import HeroSection from '@/presentation/components/Home/HeroSection';
+import IntroSection from '@/presentation/components/Home/IntroSection';
 import ServicesSection from '@/presentation/components/Home/ServicesSection';
 import KeyClientsSection from '@/presentation/components/Home/KeyClientsSection';
 import WhyUsSection from '@/presentation/components/Home/WhyUsSection';
@@ -29,8 +29,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const branches = await branchRepo.getActive();
 
   return (
-    <div className="animate-fade-in-up">
+    <div>
       <HeroSection settings={settings} locale={locale} />
+      <IntroSection locale={locale} />
       <ServicesSection services={services} locale={locale} />
       <KeyClientsSection clients={clients} locale={locale} settings={settings} />
       <WhyUsSection locale={locale} />

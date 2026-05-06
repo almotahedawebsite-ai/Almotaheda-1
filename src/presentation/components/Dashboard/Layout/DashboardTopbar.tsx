@@ -1,4 +1,3 @@
-import React from 'react';
 import Link from 'next/link';
 import { FiGlobe } from 'react-icons/fi';
 

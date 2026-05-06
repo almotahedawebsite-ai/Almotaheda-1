@@ -47,7 +47,7 @@ export default async function ClientsPage({ params }: { params: Promise<{ locale
   );
 
   return (
-    <div className="pt-20 animate-fade-in-up">
+    <div className="animate-fade-in-up">
       {/* ── Header ── */}
       <section className="py-20 flex items-center justify-center text-white text-center relative overflow-hidden min-h-[40vh]">
         <img
@@ -62,13 +62,13 @@ export default async function ClientsPage({ params }: { params: Promise<{ locale
         </div>
         <div className="container mx-auto px-6 relative z-10">
           <span className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-5 py-2 rounded-full text-sm font-black mb-4">
-            <FiStar /> {locale === 'ar' ? 'عملاؤنا المميزون' : 'Our Key Clients'}
+            <FiStar /> {locale === 'ar' ? 'شركاء النجاح المميزون' : 'Our Key Clients'}
           </span>
           <h1 className="text-4xl md:text-6xl font-black mb-4">
             {locale === 'ar' ? 'ثقة كبرى المؤسسات' : 'Trusted by Major Organizations'}
           </h1>
           <p className="text-white/60 text-lg max-w-2xl mx-auto">
-            {locale === 'ar' ? 'نفتخر بخدمة أهم العملاء والمؤسسات في مصر' : "Proudly serving Egypt's most prestigious organizations"}
+            {locale === 'ar' ? 'نفتخر بخدمة أهم شركاء النجاح والمؤسسات في مصر' : "Proudly serving Egypt's most prestigious organizations"}
           </p>
         </div>
       </section>
@@ -80,7 +80,7 @@ export default async function ClientsPage({ params }: { params: Promise<{ locale
             <div className="text-center py-20 flex flex-col items-center justify-center">
               <FiStar className="text-6xl mb-4 text-brand-navy" />
               <p className="text-gray-400 text-lg font-bold">
-                {locale === 'ar' ? 'سيتم إضافة العملاء قريباً' : 'Clients coming soon'}
+                {locale === 'ar' ? 'سيتم إضافة شركاء النجاح قريباً' : 'Clients coming soon'}
               </p>
             </div>
           ) : (

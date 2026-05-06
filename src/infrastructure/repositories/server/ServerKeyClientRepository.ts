@@ -33,7 +33,7 @@ export class ServerKeyClientRepository extends ServerBaseRepository<KeyClient> {
     )();
   }
 
-  async getById(id: string): Promise<KeyClient | null> {
+  override async getById(id: string): Promise<KeyClient | null> {
     return unstable_cache(
       async () => {
         const doc = await this.collection.doc(id).get();

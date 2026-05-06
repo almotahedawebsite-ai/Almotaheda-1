@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import {  useState, useEffect  } from 'react';
 import { db } from '@/infrastructure/firebase/config';
 import { SettingsRepository } from '@/infrastructure/repositories/SettingsRepository';
 import { SiteSettings } from '@/domain/types/settings';

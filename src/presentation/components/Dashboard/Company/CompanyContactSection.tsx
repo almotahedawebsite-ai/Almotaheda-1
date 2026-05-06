@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import {  Dispatch, SetStateAction  } from 'react';
 import { TranslatableField } from '@/presentation/components/Dashboard/TranslatableField';
 import { TranslatableString, SiteSettings } from '@/domain/types/settings';
 

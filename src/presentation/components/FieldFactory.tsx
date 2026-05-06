@@ -1,4 +1,3 @@
-import React from 'react';
 import { tField, TranslatableString } from '@/domain/types/settings';
 
 interface FieldProps {

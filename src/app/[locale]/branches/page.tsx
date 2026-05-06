@@ -1,4 +1,3 @@
-import React from 'react';
 import { ServerBranchRepository } from '@/infrastructure/repositories/server/ServerBranchRepository';
 import { tField } from '@/domain/types/settings';
 import { FiMap, FiMapPin, FiPhone, FiClock } from 'react-icons/fi';
@@ -9,7 +8,7 @@ export default async function BranchesPage({ params }: { params: Promise<{ local
   const branches = await repo.getActive();
 
   return (
-    <div className="pt-20 animate-fade-in-up">
+    <div className="animate-fade-in-up">
       {/* Header */}
       <section className="py-20 flex items-center justify-center text-white text-center relative overflow-hidden min-h-[40vh]">
         {/* Background Layering */}

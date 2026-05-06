@@ -1,4 +1,3 @@
-import React from 'react';
 
 export const HeroBlock = ({ data }: { data: any }) => (
   <section className="relative py-20 bg-blue-900 text-white text-center">

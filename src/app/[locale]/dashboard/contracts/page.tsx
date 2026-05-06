@@ -111,7 +111,7 @@ export default function DashboardContractsPage() {
             <h1 className="text-3xl font-black text-gray-900 flex items-center gap-3"><FiFileText className="text-brand-teal" /> إدارة التعاقدات</h1>
             <p className="text-gray-500 mt-1">إدارة عقود الصيانة والنظافة مع العملاء</p>
           </div>
-          <button onClick={handleNew} className="bg-brand-teal hover:bg-brand-navy text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg flex items-center gap-2">
+          <button onClick={handleNew} className="w-full sm:w-auto bg-brand-teal hover:bg-brand-navy text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg flex justify-center items-center gap-2">
             <FiPlus /> عقد جديد
           </button>
         </div>

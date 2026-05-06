@@ -1,12 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import {  useEffect, useState  } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { SiteSettings, tField } from '@/domain/types/settings';
-import { auth, db } from '@/infrastructure/firebase/config';
+import { auth } from '@/infrastructure/firebase/config';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
-import { Service } from '@/domain/types/service';
 import { FiCalendar, FiUser, FiLogIn, FiPhone, FiMail, FiMapPin, FiMessageSquare, FiFacebook, FiInstagram, FiTwitter, FiLinkedin, FiYoutube, FiGlobe } from 'react-icons/fi';
 import { FaTiktok } from 'react-icons/fa';
 
@@ -23,25 +22,10 @@ const getPlatformIcon = (platform: string) => {
 
 export default function Footer({ settings, currentLocale = 'ar' }: { settings: Partial<SiteSettings>, currentLocale?: string }) {
   const [user, setUser] = useState<User | null>(null);
-  const [services, setServices] = useState<Service[]>([]);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => setUser(u));
     return () => unsub();
-  }, []);
-
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const colRef = collection(db, 'services');
-        const q = query(colRef, where('isActive', '==', true), orderBy('order', 'asc'), limit(6));
-        const snapshot = await getDocs(q);
-        setServices(snapshot.docs.map(doc => doc.data() as Service));
-      } catch (e) {
-        // Silently fail - services just won't show in footer
-      }
-    };
-    fetchServices();
   }, []);
 
   const t = {
@@ -58,7 +42,7 @@ export default function Footer({ settings, currentLocale = 'ar' }: { settings: P
           <div className="col-span-2 lg:col-span-1 space-y-6">
             <Link href="/" className="flex items-center gap-3">
               {settings.logoUrl ? (
-                <img src={settings.logoUrl} alt="Logo" className="h-12 brightness-0 invert opacity-80" />
+                <Image src={settings.logoUrl} alt="Logo" width={48} height={48} className="h-12 w-auto brightness-0 invert opacity-80" loading="lazy" />
               ) : (
                 <div className="w-12 h-12 bg-gradient-to-br from-brand-teal to-white/20 rounded-2xl flex items-center justify-center text-white font-black text-xl">
                   م
@@ -85,7 +69,7 @@ export default function Footer({ settings, currentLocale = 'ar' }: { settings: P
             <ul className="space-y-3 font-medium text-white/60 text-sm md:text-base">
               <li><Link href={`/${currentLocale}`} className="hover:text-brand-teal transition-colors">الرئيسية</Link></li>
               <li><Link href={`/${currentLocale}/services`} className="hover:text-brand-teal transition-colors">خدماتنا</Link></li>
-              <li><Link href={`/${currentLocale}/clients`} className="hover:text-brand-teal transition-colors">عملاؤنا</Link></li>
+              <li><Link href={`/${currentLocale}/clients`} className="hover:text-brand-teal transition-colors">شركاء النجاح</Link></li>
               <li><Link href={`/${currentLocale}/branches`} className="hover:text-brand-teal transition-colors">فروعنا</Link></li>
               <li><Link href={`/${currentLocale}/about`} className="hover:text-brand-teal transition-colors">من نحن</Link></li>
               <li><Link href={`/${currentLocale}/booking`} className="flex items-center gap-2 hover:text-brand-teal transition-colors font-bold group"><FiCalendar className="group-hover:scale-110 transition-transform" /> احجز الآن</Link></li>
@@ -97,28 +81,17 @@ export default function Footer({ settings, currentLocale = 'ar' }: { settings: P
             </ul>
           </div>
           
-          {/* Services */}
+          {/* Services — Static links instead of client-side Firebase query */}
           <div className="col-span-1 space-y-5">
             <h3 className="font-black text-white mb-4 lg:mb-6 text-lg relative inline-block">
               خدماتنا
               <span className="absolute -bottom-2 right-0 w-1/2 h-1 bg-brand-teal rounded-full"></span>
             </h3>
             <ul className="space-y-3 font-medium text-white/60 text-sm md:text-base">
-              {services.length > 0 ? (
-                services.map(s => (
-                  <li key={s.id}>
-                    <Link href={`/${currentLocale}/services/${s.slug}`} className="hover:text-brand-teal transition-colors">
-                      {tField(s.name, currentLocale)}
-                    </Link>
-                  </li>
-                ))
-              ) : (
-                <>
-                  <li><Link href={`/${currentLocale}/services`} className="hover:text-brand-teal transition-colors">النظافة الداخلية</Link></li>
-                  <li><Link href={`/${currentLocale}/services`} className="hover:text-brand-teal transition-colors">تنظيف الواجهات</Link></li>
-                  <li><Link href={`/${currentLocale}/services`} className="hover:text-brand-teal transition-colors">مكافحة الحشرات</Link></li>
-                </>
-              )}
+              <li><Link href={`/${currentLocale}/services`} className="hover:text-brand-teal transition-colors">جميع الخدمات</Link></li>
+              <li><Link href={`/${currentLocale}/contact`} className="hover:text-brand-teal transition-colors">طلب خدمة</Link></li>
+              <li><Link href={`/${currentLocale}/booking`} className="hover:text-brand-teal transition-colors">حجز موعد</Link></li>
+              <li><Link href={`/${currentLocale}/about`} className="hover:text-brand-teal transition-colors">عن الشركة</Link></li>
             </ul>
           </div>
 
@@ -132,15 +105,15 @@ export default function Footer({ settings, currentLocale = 'ar' }: { settings: P
             <ul className="space-y-4 text-white/60 text-sm relative z-10">
               {(settings.whatsappCta || settings.contactWhatsapp) && (
                 <li className="flex items-center gap-3 group px-2 py-1 -mx-2 hover:bg-white/5 rounded-lg transition-colors">
-                  <FiMessageSquare className="text-green-400 group-hover:animate-pulse" /> 
-                  <a href={`https://wa.me/${(settings.whatsappCta || settings.contactWhatsapp || '').replace(/[^0-9]/g, '')}`} target="_blank" className="hover:text-green-400 transition-colors" dir="ltr">
+                  <FiMessageSquare className="text-green-400" /> 
+                  <a href={`https://wa.me/${(settings.whatsappCta || settings.contactWhatsapp || '').replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="hover:text-green-400 transition-colors" dir="ltr">
                     {settings.whatsappCta || settings.contactWhatsapp}
                   </a>
                 </li>
               )}
               {settings.contactPhone && (
                 <li className="flex items-center gap-3">
-                  <FiPhone className="text-brand-teal animate-bounce" /> <span dir="ltr">{settings.contactPhone}</span>
+                  <FiPhone className="text-brand-teal" /> <span dir="ltr">{settings.contactPhone}</span>
                 </li>
               )}
               {settings.contactEmail && (
@@ -160,7 +133,7 @@ export default function Footer({ settings, currentLocale = 'ar' }: { settings: P
             {settings.socialLinks && settings.socialLinks.length > 0 && (
               <div className="flex gap-3 pt-4 flex-wrap">
                 {settings.socialLinks.map((link, idx) => (
-                  <a key={idx} href={link.url} target="_blank" className="w-10 h-10 rounded-xl bg-white/10 hover:bg-brand-teal flex items-center justify-center transition-all hover:-translate-y-1" title={link.platform}>
+                  <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/10 hover:bg-brand-teal flex items-center justify-center transition-all hover:-translate-y-1" title={link.platform}>
                     {getPlatformIcon(link.platform)}
                   </a>
                 ))}

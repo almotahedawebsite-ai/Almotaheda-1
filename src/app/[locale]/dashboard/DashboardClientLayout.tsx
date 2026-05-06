@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { auth } from '@/infrastructure/firebase/config';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth';
 import DashboardSidebar from '@/presentation/components/Dashboard/Layout/DashboardSidebar';
 import DashboardTopbar from '@/presentation/components/Dashboard/Layout/DashboardTopbar';
@@ -14,13 +14,11 @@ interface Props {
     displayName: string | null;
     photoURL: string | null;
   };
-  settings: any;
   currentLocale: string;
 }
 
-export default function DashboardClientLayout({ children, user, settings, currentLocale }: Props) {
+export default function DashboardClientLayout({ children, user, currentLocale }: Props) {
   const router = useRouter();
-  const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleLogout = async () => {

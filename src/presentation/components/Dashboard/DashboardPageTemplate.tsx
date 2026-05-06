@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 
 export interface DashboardSection {
   id: string;
@@ -26,7 +25,10 @@ export default function DashboardPageTemplate({
 
   useEffect(() => {
     if (sections.length > 0 && !activeTabId) {
-      setActiveTabId(sections[0].id);
+      const firstSection = sections[0];
+      if (firstSection) {
+        setActiveTabId(firstSection.id);
+      }
     }
   }, [sections]);
 
@@ -52,7 +54,7 @@ export default function DashboardPageTemplate({
       </div>
 
       {/* Internal Navigation (Tabs) */}
-      <div className="sticky top-0 lg:top-0 z-30 bg-white/90 backdrop-blur-md rounded-2xl shadow-sm border border-gray-100 p-2 overflow-x-auto flex items-center gap-2 custom-scrollbar">
+      <div className="sticky top-0 lg:top-0 z-30 bg-white/90 backdrop-blur-md rounded-2xl shadow-sm border border-gray-100 p-2 overflow-x-auto flex items-center gap-2 [&::-webkit-scrollbar]:w-[6px] [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-[3px]">
         {sections.map((section) => {
           const isActive = activeTabId === section.id;
           return (

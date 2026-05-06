@@ -6,7 +6,7 @@ import { ServiceRepository } from '@/infrastructure/repositories/ServiceReposito
 import { CloudinaryService } from '@/infrastructure/services/CloudinaryService';
 import { Service } from '@/domain/types/service';
 import { tField } from '@/domain/types/settings';
-import { FiLayers, FiPlus, FiCheck, FiPauseCircle, FiEdit2, FiTrash2, FiSave, FiX, FiArrowLeft, FiToggleLeft, FiToggleRight } from 'react-icons/fi';
+import { FiLayers, FiPlus, FiEdit2, FiTrash2, FiSave, FiX, FiArrowLeft, FiToggleLeft, FiToggleRight } from 'react-icons/fi';
 
 export default function DashboardServicesPage() {
   const [services, setServices] = useState<Service[]>([]);
@@ -146,12 +146,12 @@ export default function DashboardServicesPage() {
   return (
     <>
       <div className="space-y-8 animate-fade-in-up">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-black text-gray-900 flex items-center gap-3"><FiLayers className="text-brand-teal" /> إدارة الخدمات</h1>
             <p className="text-gray-500 mt-1">إضافة وتعديل وحذف خدمات الشركة</p>
           </div>
-          <button onClick={handleNew} className="bg-brand-teal hover:bg-brand-navy text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg flex items-center gap-2">
+          <button onClick={handleNew} className="w-full sm:w-auto bg-brand-teal hover:bg-brand-navy text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg flex justify-center items-center gap-2">
             <FiPlus /> إضافة خدمة
           </button>
         </div>

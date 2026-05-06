@@ -1,11 +1,12 @@
-import React from 'react';
 import { ServerSettingsRepository } from '@/infrastructure/repositories/server/ServerSettingsRepository';
 import { tField } from '@/domain/types/settings';
-import Link from 'next/link';
-import { FiAward, FiGrid, FiTarget, FiShield, FiStar } from 'react-icons/fi';
+
+import { FiAward, FiTarget, FiShield, FiStar } from 'react-icons/fi';
 import ConsultationSection from '@/presentation/components/Home/ConsultationSection';
 import { ServerServiceRepository } from '@/infrastructure/repositories/server/ServerServiceRepository';
 import ServicesSection from '@/presentation/components/Home/ServicesSection';
+import DetailedServicesSection from '@/presentation/components/About/DetailedServicesSection';
+import WhatWeCleanSection from '@/presentation/components/About/WhatWeCleanSection';
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -16,7 +17,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   const services = await serviceRepo.getActive();
 
   return (
-    <div className="pt-20 animate-fade-in-up">
+    <div className="animate-fade-in-up">
       {/* Hero */}
       <section className="py-20 flex items-center justify-center text-white text-center relative overflow-hidden min-h-[45vh]">
         {/* Background Layering */}
@@ -43,19 +44,28 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       </section>
 
       {/* Intro Content */}
-      <section className="py-16 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800">
-        <div className="container mx-auto px-6 max-w-4xl text-center">
+      <section className="py-10 md:py-16 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800">
+        <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
           <h2 className="text-3xl font-black text-gray-900 dark:text-white mb-6">
             {tField(settings.siteName, locale) || 'المتحدة'}
           </h2>
-          <div className="text-gray-600 dark:text-gray-300 text-lg leading-loose whitespace-pre-line">
-            {tField(settings.aboutContent, locale) || (locale === 'ar' ? 'شركة المتحدة لخدمات النظافة' : 'Al-Motaheda Cleaning Service')}
+          <div className="text-gray-600 dark:text-gray-300 text-lg leading-loose whitespace-pre-line text-center" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+            {locale === 'ar' 
+              ? 'شركتنا خبرة اكثر من سبع سنوات في مجال النظافة الشاملة للمنازل والفيلات والشركات والمصانع والمدارس والمستشفيات وايضاً نظافة المداخن وهود المطاعم والفنادق وتنظيف وتلميع الواجهات الزجاجية والكلادينج والرخام مهما بلغ أرتفاع الواجهة، وجلي وتلميع الرخام ، ونقوم بنظافة جميع انواع الخزانات مهما بلغ حجمها , كما نقوم بجميع اعمال اللاند سكيب وايضاً لدينا قسم خاص بمكافحة الحشرات والقضاء عليها تماماً لأن لدينا فريق عمل ذو خبرة ومدرب تدريباً فنياً عالياً على القيام بمثل هذه الأعمال من خلال برنامج تدريبي صارم و دون التقصير فيها،كما لدينا فريق متخصص في التعقيم ضد الفيروسات والجراثيم , وتستخدم الشركه احدث الوسائل والمعدات في العمل كما تستخدم الشركه افضل الخامات العاليه ذو الماركات العالميه وموردينا هم من اكبر الشركات مثل ( جونسون دايفرسي - تي سي ال- وغيرها من الشركات العالميه) لاننا علي عقيده جازمه بان نحافظ علي اثاثات ومفروشات شركاء النجاح الكرام باستخدام تلك الخامات العالميه ،ونعمل ايضاَ على تحسين معاييرنا العالية لكي نصبح الأفضل في هذا المجال وبالفعل اصبحنا، عليك ان تثق بأننا سنقوم بجميع الأعمال المطلوبة علي أكمل وجه في اسرع وقت ممكن و بافضل جوده.'
+              : tField(settings.aboutContent, locale) || 'Al-Motaheda Cleaning Service'
+            }
           </div>
         </div>
       </section>
 
       {/* Explore Our Services */}
       <ServicesSection services={services} locale={locale} />
+
+      {/* What We Clean */}
+      <WhatWeCleanSection locale={locale} />
+
+      {/* Detailed Services Text */}
+      <DetailedServicesSection locale={locale} />
 
       {/* Consultation Section */}
       <ConsultationSection locale={locale} settings={settings} />

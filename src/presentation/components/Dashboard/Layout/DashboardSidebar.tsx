@@ -1,8 +1,7 @@
-import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
-  FiPieChart, FiLayers, FiStar, FiMap, FiList, FiCreditCard, FiFileText, 
+  FiPieChart, FiLayers, FiStar, FiMap, FiList, FiFileText, 
   FiEdit3, FiPenTool, FiShield, FiInbox, FiUsers, FiSettings, FiSearch, 
   FiTrendingUp, FiBookOpen, FiLogOut 
 } from 'react-icons/fi';
@@ -20,7 +19,7 @@ export default function DashboardSidebar({ currentLocale, handleLogout, setSideb
   const navItems = [
     { href: `/${currentLocale}/dashboard`, icon: <FiPieChart />, label: 'الرئيسية (Overview)' },
     { href: `/${currentLocale}/dashboard/services`, icon: <FiLayers />, label: 'إدارة الخدمات' },
-    { href: `/${currentLocale}/dashboard/key-clients`, icon: <FiStar />, label: 'أهم العملاء' },
+    { href: `/${currentLocale}/dashboard/key-clients`, icon: <FiStar />, label: 'أهم شركاء النجاح' },
     { href: `/${currentLocale}/dashboard/branches`, icon: <FiMap />, label: 'إدارة الفروع' },
     { href: `/${currentLocale}/dashboard/bookings`, icon: <FiList />, label: 'إدارة الحجوزات' },
     { href: `/${currentLocale}/dashboard/contracts`, icon: <FiFileText />, label: 'التعاقدات' },
@@ -50,7 +49,7 @@ export default function DashboardSidebar({ currentLocale, handleLogout, setSideb
         <p className="text-[10px] text-slate-500 mt-1 font-black uppercase tracking-widest leading-tight">Al-Motaheda Admin Panel</p>
       </div>
 
-      <nav className="flex-1 p-3 space-y-0.5 mt-2 overflow-y-auto custom-scrollbar">
+      <nav className="flex-1 p-3 space-y-0.5 mt-2 overflow-y-auto [&::-webkit-scrollbar]:w-[6px] [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-brand-navy/10 [&::-webkit-scrollbar-thumb]:rounded-[3px]">
         <p className="px-4 text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 mt-2">إدارة الأعمال</p>
         {navItems.map(item => (
           <Link

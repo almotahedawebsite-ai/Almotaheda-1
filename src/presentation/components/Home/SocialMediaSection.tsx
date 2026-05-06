@@ -1,4 +1,3 @@
-import React from 'react';
 import { FiInstagram, FiFacebook, FiTwitter, FiLinkedin, FiYoutube, FiLink } from 'react-icons/fi';
 import { FaTiktok } from 'react-icons/fa';
 
@@ -15,7 +14,7 @@ const getIcon = (platform: string) => {
 
 export default function SocialMediaSection({ settings, locale }: { settings: any; locale: string }) {
   return (
-    <section className="py-20 bg-gradient-to-br from-brand-navy to-brand-dark text-white text-center relative overflow-hidden border-b border-white/10 relative z-10">
+    <section className="py-20 bg-gradient-to-br from-brand-navy to-brand-dark text-white text-center relative overflow-hidden border-b border-white/10 z-10">
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-teal rounded-full blur-[120px]" />
       </div>
@@ -41,7 +40,8 @@ export default function SocialMediaSection({ settings, locale }: { settings: any
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex flex-col items-center justify-center w-24 h-24 bg-white/5 hover:bg-brand-teal rounded-2xl backdrop-blur-sm border border-white/10 hover:border-brand-teal transition-all shadow-xl hover:-translate-y-2 hover:shadow-brand-teal/20"
+                className="group flex flex-col items-center justify-center w-24 h-24 bg-white/5 hover:bg-brand-teal rounded-2xl border border-white/10 hover:border-brand-teal transition-all shadow-xl hover:-translate-y-2 hover:shadow-brand-teal/20"
+                aria-label={link.platform}
               >
                 <div className="text-3xl mb-2 transition-transform group-hover:scale-110">
                   {getIcon(link.platform)}

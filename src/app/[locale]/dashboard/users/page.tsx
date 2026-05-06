@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import {  useState, useEffect  } from 'react';
 import { db } from '@/infrastructure/firebase/config';
 import { doc, getDocs, collection, deleteDoc, setDoc, query, orderBy } from 'firebase/firestore';
 import { FiUsers, FiLock, FiChevronDown, FiUser, FiTrash2, FiPlus } from 'react-icons/fi';
@@ -124,7 +124,7 @@ export default function UsersManagementPage() {
         </summary>
         <div className="p-6 space-y-4">
           {/* Add Admin Form */}
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <input
               className="flex-1 p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-primary font-mono text-sm"
               placeholder="أدخل البريد الإلكتروني للمشرف الجديد..."
@@ -143,8 +143,8 @@ export default function UsersManagementPage() {
           </div>
 
           {/* Admins Table */}
-          <div className="border rounded-xl overflow-hidden">
-            <table className="w-full text-sm">
+          <div className="border rounded-xl overflow-x-auto">
+            <table className="w-full text-sm min-w-[500px]">
               <thead className="bg-gray-50 border-b">
                 <tr>
                   <th className="text-right p-3 font-bold text-gray-600">البريد الإلكتروني</th>
@@ -195,8 +195,8 @@ export default function UsersManagementPage() {
           {clients.length === 0 ? (
             <p className="text-center text-gray-400 py-8">لا يوجد عملاء مسجلون بعد. سيظهرون هنا بعد تسجيل دخول أول عميل من الموقع.</p>
           ) : (
-            <div className="border rounded-xl overflow-hidden">
-              <table className="w-full text-sm">
+            <div className="border rounded-xl overflow-x-auto">
+              <table className="w-full text-sm min-w-[600px]">
                 <thead className="bg-gray-50 border-b">
                   <tr>
                     <th className="text-right p-3 font-bold text-gray-600">العميل</th>

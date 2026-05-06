@@ -1,8 +1,7 @@
 'use client';
 
-import React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { locales, Locale } from '@/lib/i18n';
+
 import { FiGlobe } from 'react-icons/fi';
 
 export default function LanguageSwitcher({ currentLocale = 'ar' }: { currentLocale?: string }) {
@@ -27,7 +26,7 @@ export default function LanguageSwitcher({ currentLocale = 'ar' }: { currentLoca
   return (
     <button 
       onClick={toggleLanguage}
-      className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/20 font-black px-6 py-3 rounded-2xl transition-all flex items-center gap-3 shadow-xl hover:scale-105 active:scale-95"
+      className="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-black px-6 py-3 rounded-2xl transition-all flex items-center gap-3 shadow-xl hover:scale-105 active:scale-95"
     >
       <FiGlobe className="text-xl" /> 
       <span className="uppercase tracking-widest text-sm">

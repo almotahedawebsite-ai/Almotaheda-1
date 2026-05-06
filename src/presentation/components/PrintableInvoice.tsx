@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { Booking } from '@/domain/types/booking';
 import { FiPrinter, FiCheckCircle, FiXCircle, FiFlag, FiClock } from 'react-icons/fi';
 

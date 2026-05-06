@@ -1,4 +1,3 @@
-import React from 'react';
 
 export const GalleryBlock = ({ data }: { data: any }) => (
   <section className="py-16 bg-gray-50">

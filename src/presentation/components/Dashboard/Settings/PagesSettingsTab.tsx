@@ -1,4 +1,3 @@
-import React from 'react';
 import { FiHome, FiLayers, FiStar, FiMap, FiInfo, FiPhone, FiList, FiFileText, FiCheckCircle, FiXCircle, FiChevronDown } from 'react-icons/fi';
 
 export const seoPages = [

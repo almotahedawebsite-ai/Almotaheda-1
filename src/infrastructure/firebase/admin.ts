@@ -1,10 +1,10 @@
 import * as admin from 'firebase-admin';
 
 const firebaseAdminConfig = {
-  projectId: process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+  projectId: process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "",
+  clientEmail: process.env.FIREBASE_CLIENT_EMAIL || "",
   // Handle the private key newline issues commonly found in environment variables
-  privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+  privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n') || "",
 };
 
 function initializeAdmin() {
@@ -19,12 +19,15 @@ function initializeAdmin() {
         })
       : undefined;
 
-  return admin.initializeApp({
-    credential: cert,
+  const options: admin.AppOptions = {
     projectId: firebaseAdminConfig.projectId,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    databaseURL: process.env.FIREBASE_DATABASE_URL
-  });
+  };
+
+  if (cert) options.credential = cert;
+  if (process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET) options.storageBucket = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
+  if (process.env.FIREBASE_DATABASE_URL) options.databaseURL = process.env.FIREBASE_DATABASE_URL;
+
+  return admin.initializeApp(options);
 }
 
 const adminApp = initializeAdmin();

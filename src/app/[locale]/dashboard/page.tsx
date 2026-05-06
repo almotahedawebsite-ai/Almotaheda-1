@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import {  useEffect, useState  } from 'react';
 import { db } from '@/infrastructure/firebase/config';
 import { collection, getCountFromServer } from 'firebase/firestore';
 import Link from 'next/link';
@@ -85,10 +85,10 @@ export default function DashboardHome() {
 
   return (
     <div className="space-y-10 animate-fade-in-up">
-      <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex justify-between items-center">
+      <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-black text-gray-900 flex items-center gap-3">مرحباً بك في لوحة التحكم <FiSmile className="text-brand-teal" /></h1>
-          <p className="text-gray-500 mt-2 text-lg">نظرة عامة على نشاط شركة المتحدة</p>
+          <h1 className="text-2xl md:text-3xl font-black text-gray-900 flex items-center gap-3">مرحباً بك في لوحة التحكم <FiSmile className="text-brand-teal" /></h1>
+          <p className="text-gray-500 mt-2 text-sm md:text-lg">نظرة عامة على نشاط شركة المتحدة</p>
         </div>
         <div className="hidden md:block">
           <span className="text-6xl text-gray-200 opacity-20"><FiBarChart2 /></span>
@@ -136,7 +136,7 @@ export default function DashboardHome() {
           <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
             <FiZap className="text-brand-teal" /> روابط الوصول السريع
           </h2>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 min-[400px]:grid-cols-2 gap-3">
             <Link href={`/${currentLocale}/dashboard/services`} className="p-4 bg-gray-50 rounded-2xl border border-gray-100 flex flex-col items-center justify-center gap-2 hover:bg-brand-teal/5 hover:border-brand-teal/20 transition-all font-bold text-gray-600 text-sm">
               <FiLayers className="text-brand-teal text-xl" /> إدارة الخدمات
             </Link>

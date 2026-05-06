@@ -92,12 +92,12 @@ export default function DashboardBranchesPage() {
 
   return (
     <div className="space-y-8 animate-fade-in-up">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-black text-gray-900 flex items-center gap-3"><FiMap className="text-brand-teal" /> إدارة الفروع</h1>
           <p className="text-gray-500 mt-1">المقرات، أرقام التواصل لكل فرع، ومسؤولي الفروع</p>
         </div>
-        <button onClick={handleNew} className="bg-brand-teal hover:bg-brand-navy text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg flex items-center gap-2">
+        <button onClick={handleNew} className="w-full sm:w-auto bg-brand-teal hover:bg-brand-navy text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg flex justify-center items-center gap-2">
           <FiPlus /> إضافة فرع جديد
         </button>
       </div>

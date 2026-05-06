@@ -1,7 +1,6 @@
-import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { FiMessageSquare, FiPhoneCall, FiCheckCircle } from 'react-icons/fi';
-import { tField } from '@/domain/types/settings';
 
 export default function ConsultationSection({ locale, settings }: { locale: string; settings: any }) {
   return (
@@ -10,10 +9,14 @@ export default function ConsultationSection({ locale, settings }: { locale: stri
         
         {/* Image Side */}
         <div className="w-full lg:w-1/2 relative min-h-[400px]">
-          <img 
+          <Image 
             src={settings.aboutImage || 'https://res.cloudinary.com/dsr72hebx/image/upload/v1775242937/image_about_1775242848845_o49wej.jpg'} 
             alt={locale === 'ar' ? 'استشارة مجانية' : 'Free Consultation'} 
-            className="absolute inset-0 w-full h-full object-cover opacity-80"
+            fill
+            className="object-cover opacity-80"
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            loading="lazy"
+            quality={70}
           />
           {/* Navy Overlay to match brand */}
           <div className="absolute inset-0 bg-brand-navy mix-blend-multiply opacity-50" />

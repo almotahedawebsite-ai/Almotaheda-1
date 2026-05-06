@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useTransition, Suspense } from 'react';
+import {  useEffect, useState, Suspense  } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 // Inner component that reads search params (must be inside Suspense)
@@ -37,6 +37,7 @@ function NavigationProgressInner() {
       };
     }
     setPrevPath(currentPath);
+    return undefined;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPath]);
 

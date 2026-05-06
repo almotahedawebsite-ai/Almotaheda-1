@@ -5,8 +5,7 @@ import { db } from '@/infrastructure/firebase/config';
 import { SettingsRepository } from '@/infrastructure/repositories/SettingsRepository';
 import { SiteSettings } from '@/domain/types/settings';
 import { CloudinaryService } from '@/infrastructure/services/CloudinaryService';
-import { TranslatableField } from '@/presentation/components/Dashboard/TranslatableField';
-import { TranslatableString } from '@/domain/types/settings';
+
 import { FiSave, FiImage, FiDroplet, FiCamera, FiLayout } from 'react-icons/fi';
 import DashboardPageTemplate from '@/presentation/components/Dashboard/DashboardPageTemplate';
 import BrandLogoSection from '@/presentation/components/Dashboard/Brand/BrandLogoSection';
@@ -49,18 +48,18 @@ export default function BrandSettingsPage() {
     }
   };
 
-  const uploadLogo = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadBrandImage = async (e: React.ChangeEvent<HTMLInputElement>, key: 'logoUrl' | 'faviconUrl' | 'metaGraphImage', successMsg: string) => {
     const file = e.target.files?.[0];
     if (!file) return;
     try {
       const url = await CloudinaryService.uploadImage(file);
-      setSettings(s => ({ ...s, logoUrl: url }));
-      // Auto-save the logo URL immediately after upload
-      await repo.saveGlobalSettings({ ...settings, logoUrl: url });
+      setSettings(s => ({ ...s, [key]: url }));
+      // Auto-save the image URL immediately after upload
+      await repo.saveGlobalSettings({ ...settings, [key]: url });
       await revalidateCache();
-      alert('تم رفع اللوجو وحفظه بنجاح! سيظهر في الموقع الآن.');
+      alert(successMsg);
     } catch (err) {
-      alert('فشل رفع الشعار');
+      alert('فشل رفع الصورة');
     }
   };
 
@@ -104,7 +103,7 @@ export default function BrandSettingsPage() {
       icon: <FiImage />,
       content: (
         <SettingsAccordionGroup title="إدارة الاسم والشعار" icon={<FiImage />}>
-          <BrandLogoSection settings={settings} setSettings={setSettings} uploadLogo={uploadLogo} />
+          <BrandLogoSection settings={settings} setSettings={setSettings} uploadBrandImage={uploadBrandImage} />
         </SettingsAccordionGroup>
       )
     },
@@ -124,7 +123,7 @@ export default function BrandSettingsPage() {
       icon: <FiCamera />,
       content: (
         <SettingsAccordionGroup title="إدارة الميديا وصور الموقع" icon={<FiCamera />}>
-          <BrandMediaSection settings={settings} setSettings={setSettings} uploadMediaImage={uploadMediaImage} removeMediaImage={removeMediaImage} />
+          <BrandMediaSection settings={settings} uploadMediaImage={uploadMediaImage} removeMediaImage={removeMediaImage} />
         </SettingsAccordionGroup>
       )
     },

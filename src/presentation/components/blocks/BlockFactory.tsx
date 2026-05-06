@@ -49,9 +49,9 @@ const BlockSkeleton = ({ height = '200px' }: { height?: string }) => (
 );
 
 class ErrorBoundary extends React.Component<{ children: React.ReactNode, blockType: string }, { hasError: boolean }> {
-  state = { hasError: false };
+  override state = { hasError: false };
   static getDerivedStateFromError() { return { hasError: true }; }
-  render() {
+  override render() {
     if (this.state.hasError) return <div className="p-4 bg-orange-50 text-orange-600">Failed to render block: {this.props.blockType}</div>;
     return this.props.children;
   }

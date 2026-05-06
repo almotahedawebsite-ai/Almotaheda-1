@@ -4,7 +4,7 @@ import { ServerServiceRepository } from '@/infrastructure/repositories/server/Se
 import { ServerSettingsRepository } from '@/infrastructure/repositories/server/ServerSettingsRepository';
 import { tField } from '@/domain/types/settings';
 import { notFound } from 'next/navigation';
-import { FiArrowLeft, FiCalendar, FiMessageSquare, FiDroplet, FiShield, FiSearch, FiCoffee, FiTool, FiSun, FiBriefcase, FiUser, FiCheckCircle, FiStar, FiPhone } from 'react-icons/fi';
+import { FiArrowLeft, FiMessageSquare, FiDroplet, FiShield, FiSearch, FiCoffee, FiTool, FiSun, FiBriefcase, FiUser, FiCheckCircle, FiStar, FiPhone } from 'react-icons/fi';
 
 const serviceIcons: Record<string, React.ReactNode> = {
   'cleaning': <FiDroplet />, 'sanitization': <FiShield />, 'pest-control': <FiSearch />, 'restaurant': <FiCoffee />,
@@ -25,7 +25,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   const otherServices = allServices.filter(s => s.id !== service.id).slice(0, 4);
 
   return (
-    <div className="pt-20 animate-fade-in-up">
+    <div className="animate-fade-in-up">
       {/* Hero */}
       <section className="relative py-20 bg-gradient-to-br from-brand-navy to-brand-dark text-white overflow-hidden">
         <div className="absolute inset-0 opacity-10">
@@ -90,12 +90,13 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                 <p className="text-white/60 text-sm mb-6">
                   {locale === 'ar' ? 'تواصل معنا الآن لحجز هذه الخدمة والحصول على أفضل النتائج' : 'Contact us now to book this service'}
                 </p>
-                <Link
-                  href={`/${locale}/booking?service=${service.id}`}
+                <a
+                  href={`tel:${settings.contactPhone || '+201000000000'}`}
                   className="group flex justify-center items-center gap-2 w-full bg-white text-brand-navy hover:bg-brand-teal hover:text-white py-4 rounded-2xl font-black transition-all shadow-lg text-lg"
+                  dir="ltr"
                 >
-                  <FiCalendar className="group-hover:scale-110 transition-transform" /> {locale === 'ar' ? 'احجز الآن' : 'Book Now'}
-                </Link>
+                  <FiPhone className="group-hover:scale-110 transition-transform" /> <span>{locale === 'ar' ? 'اتصل الآن' : 'Call Now'}</span>
+                </a>
 
                 {(settings.whatsappCta || settings.contactWhatsapp) && (
                   <a

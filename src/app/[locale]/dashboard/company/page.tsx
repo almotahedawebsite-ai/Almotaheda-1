@@ -56,7 +56,9 @@ export default function CorporateSettingsPage() {
 
   const handleUpdateSocialLink = (index: number, field: 'platform' | 'url' | 'icon', value: string) => {
     const newLinks = [...(settings.socialLinks || [])];
-    newLinks[index][field] = value;
+    if (newLinks[index]) {
+      newLinks[index]![field] = value;
+    }
     setSettings({ ...settings, socialLinks: newLinks });
   };
 

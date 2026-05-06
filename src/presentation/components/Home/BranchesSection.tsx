@@ -1,4 +1,4 @@
-import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { tField } from '@/domain/types/settings';
 import { Branch } from '@/domain/types/branch';
@@ -27,9 +27,11 @@ export default function BranchesSection({ branches, locale }: { branches: Branch
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {branches.slice(0, 3).map((branch) => (
-              <div key={branch.id} className="bg-gray-50 dark:bg-slate-800 rounded-3xl overflow-hidden border border-gray-100 dark:border-slate-700 card-hover">
+              <div key={branch.id} className="bg-gray-50 dark:bg-slate-800 rounded-3xl overflow-hidden border border-gray-100 dark:border-slate-700 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-[6px] hover:shadow-[0_20px_40px_rgba(10,36,99,0.12)]">
                 {branch.image ? (
-                  <img src={branch.image} alt={tField(branch.name, locale)} className="w-full h-48 object-cover" />
+                  <div className="w-full h-48 relative">
+                    <Image src={branch.image} alt={tField(branch.name, locale)} fill className="object-cover" sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" loading="lazy" quality={70} />
+                  </div>
                 ) : (
                   <div className="w-full h-48 bg-gradient-to-br from-brand-navy to-brand-teal flex items-center justify-center text-6xl text-white/30 group-hover:scale-105 transition-transform duration-500">
                     <FiMap />

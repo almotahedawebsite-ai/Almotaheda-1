@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import {  useState, useEffect  } from 'react';
 import { db } from '@/infrastructure/firebase/config';
 import { SettingsRepository } from '@/infrastructure/repositories/SettingsRepository';
 import { SiteSettings } from '@/domain/types/settings';
@@ -109,7 +109,7 @@ export default function TrackingSettingsPage() {
         <button 
           onClick={handleSave} 
           disabled={saving}
-          className="bg-brand-teal hover:bg-brand-navy text-white px-8 py-3.5 rounded-xl font-bold transition-all shadow-lg disabled:opacity-50 shrink-0 flex items-center gap-2"
+          className="w-full sm:w-auto bg-brand-teal hover:bg-brand-navy text-white px-8 py-3.5 rounded-xl font-bold transition-all shadow-lg disabled:opacity-50 shrink-0 flex justify-center items-center gap-2"
         >
           {saving ? 'جاري الحفظ...' : <><FiSave /> حفظ الإعدادات</>}
         </button>

@@ -8,7 +8,7 @@ import { useSearchParams, useParams } from 'next/navigation';
 import { Service } from '@/domain/types/service';
 import { tField } from '@/domain/types/settings';
 import { SettingsRepository } from '@/infrastructure/repositories/SettingsRepository';
-import { FiClipboard, FiEdit, FiInfo, FiArrowLeft, FiCheckCircle, FiHome } from 'react-icons/fi';
+import { FiClipboard, FiEdit, FiInfo, FiCheckCircle, FiHome } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import Link from 'next/link';
 
@@ -104,7 +104,7 @@ export default function BookingPage() {
   };
 
   return (
-    <div className="pt-20 animate-fade-in-up">
+    <div className="animate-fade-in-up">
       {/* Header */}
       <section className="py-16 bg-gradient-to-br from-brand-navy to-brand-dark text-white text-center relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">

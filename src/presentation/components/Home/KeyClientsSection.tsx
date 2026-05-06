@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { tField } from '@/domain/types/settings';
 import { KeyClient } from '@/domain/types/keyClient';
@@ -115,15 +116,15 @@ export default function KeyClientsSection({
       <div className="container mx-auto px-6 relative z-10">
         {/* ── Section Header ── */}
         <div className="text-center mb-16">
-          <span className="inline-flex items-center gap-2 bg-white/10 text-white px-5 py-2 rounded-full text-sm font-black mb-4 backdrop-blur-sm">
-            <FiStar /> {locale === 'ar' ? 'عملاؤنا المميزون' : 'Our Key Clients'}
+          <span className="inline-flex items-center gap-2 bg-white/10 text-white px-5 py-2 rounded-full text-sm font-black mb-4 ">
+            <FiStar /> {locale === 'ar' ? 'شركاء النجاح المميزون' : 'Our Key Clients'}
           </span>
           <h2 className="text-4xl md:text-5xl font-black leading-tight">
             {locale === 'ar' ? 'ثقة كبرى الشركات والمؤسسات' : 'Trusted by Major Organizations'}
           </h2>
           <p className="text-white/60 text-lg mt-4 max-w-2xl mx-auto">
             {locale === 'ar'
-              ? 'نفتخر بخدمة أهم العملاء والمؤسسات في مصر'
+              ? 'نفتخر بخدمة أهم شركاء النجاح والمؤسسات في مصر'
               : "Proudly serving Egypt's most prestigious organizations"}
           </p>
         </div>
@@ -133,7 +134,7 @@ export default function KeyClientsSection({
           <div className="text-center py-10 flex flex-col items-center justify-center">
             <FiBriefcase className="text-5xl mb-4 text-white/20" />
             <p className="text-white/50 text-lg font-bold">
-              {locale === 'ar' ? 'سيتم إضافة العملاء قريباً' : 'Clients coming soon'}
+              {locale === 'ar' ? 'سيتم إضافة شركاء النجاح قريباً' : 'Clients coming soon'}
             </p>
           </div>
         ) : (
@@ -142,14 +143,18 @@ export default function KeyClientsSection({
               <Link
                 key={client.id}
                 href={`/${locale}/clients/${client.id}`}
-                className="glass rounded-3xl p-8 text-center group hover:bg-white/20 transition-all cursor-pointer"
+                className="bg-white/10 border border-white/15 rounded-3xl p-8 text-center group hover:bg-white/20 transition-all cursor-pointer"
                 style={{ animationDelay: `${idx * 0.1}s` }}
               >
                 {(client.logo || client.image) ? (
-                  <img
-                    src={client.logo || client.image}
+                  <Image
+                    src={client.logo || client.image || ''}
                     alt={tField(client.name, locale)}
-                    className="w-20 h-20 mx-auto mb-4 object-contain rounded-2xl"
+                    width={80}
+                    height={80}
+                    className="mx-auto mb-4 object-contain rounded-2xl"
+                    loading="lazy"
+                    quality={70}
                   />
                 ) : (
                   <div className="w-20 h-20 mx-auto mb-4 bg-white/10 rounded-2xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
@@ -170,7 +175,7 @@ export default function KeyClientsSection({
               href={`/${locale}/clients`}
               className="inline-flex items-center gap-2 bg-white text-brand-navy hover:bg-brand-teal hover:text-white px-8 py-4 rounded-2xl font-bold transition-all shadow-2xl"
             >
-              {locale === 'ar' ? 'عرض جميع العملاء' : 'View All Clients'}
+              {locale === 'ar' ? 'عرض جميع شركاء النجاح' : 'View All Clients'}
             </Link>
           </div>
         )}
@@ -185,7 +190,7 @@ export default function KeyClientsSection({
             </div>
             <div className="flex flex-col md:flex-row justify-center gap-8 md:gap-16">
               {settings.apartmentsCleanedCount && (
-                <div className="glass rounded-3xl p-10 text-center flex-1 max-w-sm mx-auto group hover:bg-white/20 transition-all cursor-default">
+                <div className="bg-white/10 border border-white/15 rounded-3xl p-10 text-center flex-1 max-w-sm mx-auto group hover:bg-white/20 transition-all cursor-default">
                   <div className="text-5xl md:text-6xl font-black text-brand-teal mb-4 group-hover:scale-110 transition-transform">
                     +{settings.apartmentsCleanedCount}
                   </div>
@@ -198,7 +203,7 @@ export default function KeyClientsSection({
                 </div>
               )}
               {settings.villasCleanedCount && (
-                <div className="glass rounded-3xl p-10 text-center flex-1 max-w-sm mx-auto group hover:bg-white/20 transition-all cursor-default">
+                <div className="bg-white/10 border border-white/15 rounded-3xl p-10 text-center flex-1 max-w-sm mx-auto group hover:bg-white/20 transition-all cursor-default">
                   <div className="text-5xl md:text-6xl font-black text-brand-teal mb-4 group-hover:scale-110 transition-transform">
                     +{settings.villasCleanedCount}
                   </div>
@@ -219,7 +224,7 @@ export default function KeyClientsSection({
           <div className="mt-24">
             {/* Header */}
             <div className="text-center mb-14">
-              <span className="inline-flex items-center gap-2 bg-white/10 text-white px-5 py-2 rounded-full text-sm font-black mb-4 backdrop-blur-sm">
+              <span className="inline-flex items-center gap-2 bg-white/10 text-white px-5 py-2 rounded-full text-sm font-black mb-4 ">
                 <FiBriefcase /> {locale === 'ar' ? 'سابقة الأعمال' : 'Portfolio'}
               </span>
               <h3 className="text-3xl md:text-4xl font-black text-white">
@@ -244,7 +249,7 @@ export default function KeyClientsSection({
                     {/* Category Label */}
                     <div className="flex items-center gap-3 mb-5">
                       <div
-                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-sm font-black bg-gradient-to-r border ${config.color} backdrop-blur-sm`}
+                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-sm font-black bg-gradient-to-r border ${config.color} `}
                       >
                         {config.icon}
                         {locale === 'ar' ? config.labelAr : config.labelEn}
@@ -260,7 +265,7 @@ export default function KeyClientsSection({
                           key={idx}
                           className={`
                             group relative inline-flex items-center gap-2
-                            bg-gradient-to-br border backdrop-blur-md
+                            bg-gradient-to-br border 
                             px-5 py-3 rounded-2xl font-bold
                             hover:scale-105 hover:shadow-lg transition-all duration-200 cursor-default
                             text-sm md:text-base

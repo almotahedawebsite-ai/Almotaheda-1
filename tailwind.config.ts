@@ -97,6 +97,18 @@ const config: Config = {
           from: { opacity: "0", transform: "scale(0.9)" },
           to: { opacity: "1", transform: "scale(1)" },
         },
+        "float": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+        "pulse-glow": {
+          "0%, 100%": { boxShadow: "0 0 0 0 rgba(62, 146, 204, 0.4)" },
+          "50%": { boxShadow: "0 0 20px 10px rgba(62, 146, 204, 0.1)" },
+        },
+        "marquee": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -106,6 +118,9 @@ const config: Config = {
         "slide-in-right": "slide-in-right 0.6s ease-out both",
         "slide-in-left": "slide-in-left 0.6s ease-out both",
         "scale-in": "scale-in 0.5s ease-out both",
+        "float": "float 3s ease-in-out infinite",
+        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "marquee": "marquee 30s linear infinite",
       },
     },
   },

@@ -1,4 +1,3 @@
-import React from 'react';
 import { FiMapPin, FiPhoneCall, FiMail, FiMessageCircle } from 'react-icons/fi';
 import { tField } from '@/domain/types/settings';
 

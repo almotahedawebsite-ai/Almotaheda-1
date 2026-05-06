@@ -95,7 +95,7 @@ export default function GlobalSettingsTab({
                 </label>
                 <p className="text-xs text-gray-400">بيعرّف جوجل باسم الموقع والروابط الأساسية</p>
                 <textarea 
-                  className="w-full p-4 font-mono text-xs bg-slate-900 text-green-400 rounded-2xl h-56 outline-none focus:ring-2 focus:ring-brand-teal/30 transition-all border-none custom-scrollbar" 
+                  className="w-full p-4 font-mono text-xs bg-slate-900 text-green-400 rounded-2xl h-56 outline-none focus:ring-2 focus:ring-brand-teal/30 transition-all border-none [&::-webkit-scrollbar]:w-[6px] [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/15 [&::-webkit-scrollbar-thumb]:rounded-[3px] hover:[&::-webkit-scrollbar-thumb]:bg-white/30" 
                   value={settings.websiteSchema || ''}
                   onChange={e => setSettings({...settings, websiteSchema: e.target.value})}
                   placeholder='{ "@context": "https://schema.org", "@type": "WebSite", ... }'
@@ -109,7 +109,7 @@ export default function GlobalSettingsTab({
                 </label>
                 <p className="text-xs text-gray-400">بيعرّف جوجل ببيانات الشركة (اللوجو، السوشيال ميديا، الاتصال)</p>
                 <textarea 
-                  className="w-full p-4 font-mono text-xs bg-slate-900 text-green-400 rounded-2xl h-56 outline-none focus:ring-2 focus:ring-brand-teal/30 transition-all border-none custom-scrollbar" 
+                  className="w-full p-4 font-mono text-xs bg-slate-900 text-green-400 rounded-2xl h-56 outline-none focus:ring-2 focus:ring-brand-teal/30 transition-all border-none [&::-webkit-scrollbar]:w-[6px] [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/15 [&::-webkit-scrollbar-thumb]:rounded-[3px] hover:[&::-webkit-scrollbar-thumb]:bg-white/30" 
                   value={settings.organizationSchema || ''}
                   onChange={e => setSettings({...settings, organizationSchema: e.target.value})}
                   placeholder='{ "@context": "https://schema.org", "@type": "Organization", ... }'

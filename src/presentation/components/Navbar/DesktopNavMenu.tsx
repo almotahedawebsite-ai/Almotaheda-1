@@ -1,4 +1,3 @@
-import React from 'react';
 import Link from 'next/link';
 import { User } from 'firebase/auth';
 import { FiGrid } from 'react-icons/fi';

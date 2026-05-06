@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { tField } from '@/domain/types/settings';
 import { Service } from '@/domain/types/service';
@@ -36,10 +37,14 @@ export default function ServicesSection({ services, locale }: { services: Servic
             >
               <Link href={`/${locale}/services/${service.slug}`} className="h-36 sm:h-56 relative overflow-hidden block">
                 {service.image ? (
-                  <img
+                  <Image
                     src={service.image}
                     alt={tField(service.name, locale)}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw"
+                    loading="lazy"
+                    quality={70}
                   />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-brand-navy to-brand-dark flex items-center justify-center transition-transform duration-700 group-hover:scale-110">

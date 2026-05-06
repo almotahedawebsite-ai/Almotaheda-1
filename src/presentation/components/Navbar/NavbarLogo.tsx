@@ -1,4 +1,4 @@
-import React from 'react';
+
 import Link from 'next/link';
 import { SiteSettings, tField } from '@/domain/types/settings';
 
@@ -12,9 +12,9 @@ export default function NavbarLogo({
   return (
     <Link href={`/${currentLocale}`} className="flex items-center gap-3 group">
       {settings.logoUrl ? (
-        <img src={settings.logoUrl} alt={tField(settings.siteName, currentLocale) || 'المتحدة'} className="h-12 w-auto object-contain" />
+        <img src={settings.logoUrl} alt={tField(settings.siteName, currentLocale) || 'المتحدة'} className="h-8 sm:h-10 md:h-12 w-auto object-contain max-w-[80px] sm:max-w-none" />
       ) : (
-        <div className="w-12 h-12 bg-gradient-to-br from-brand-navy to-brand-teal rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-brand-navy/20 group-hover:shadow-brand-navy/40 transition-shadow">
+        <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gradient-to-br from-brand-navy to-brand-teal rounded-xl md:rounded-2xl flex items-center justify-center text-white font-black text-lg md:text-xl shadow-lg shadow-brand-navy/20 group-hover:shadow-brand-navy/40 transition-shadow">
           م
         </div>
       )}

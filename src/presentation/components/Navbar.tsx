@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { SiteSettings, tField } from '@/domain/types/settings';
+import { SiteSettings } from '@/domain/types/settings';
 import DarkModeToggle from '@/presentation/components/DarkModeToggle';
 import LanguageSwitcher from '@/presentation/components/LanguageSwitcher';
 import { doc, getDoc } from 'firebase/firestore';
+import Image from 'next/image';
 import Link from 'next/link';
-import { FiCalendar, FiLogIn, FiUser, FiLogOut, FiGrid } from 'react-icons/fi';
+import { FiCalendar, FiLogIn, FiUser, FiLogOut, FiGrid, FiPhone } from 'react-icons/fi';
 import { isSuperAdminEmail } from '@/app/actions/auth';
 import NavbarLogo from '@/presentation/components/Navbar/NavbarLogo';
 import DesktopNavMenu from '@/presentation/components/Navbar/DesktopNavMenu';
@@ -14,11 +15,11 @@ import MobileSidebar from '@/presentation/components/Navbar/MobileSidebar';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { auth, db } from '@/infrastructure/firebase/config';
 
-const navLabels: Record<string, Record<string, string>> = {
+const navLabels = {
   ar: { 
     home: 'الرئيسية', 
     services: 'خدماتنا', 
-    clients: 'عملاؤنا', 
+    clients: 'شركاء النجاح', 
     branches: 'فروعنا', 
     about: 'من نحن', 
     contact: 'تواصل معنا', 
@@ -80,7 +81,7 @@ export default function Navbar({ settings, currentLocale = 'ar' }: { settings: P
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const t = navLabels[currentLocale] || navLabels['ar'];
+  const t = navLabels[currentLocale as keyof typeof navLabels] ?? navLabels['ar'];
 
   const navLinks = [
     { href: `/${currentLocale}`, label: t.home },
@@ -114,29 +115,34 @@ export default function Navbar({ settings, currentLocale = 'ar' }: { settings: P
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 w-full"
       style={navStyle}
       id="main-navbar"
     >
-      <div className="container mx-auto px-6 h-20 flex items-center justify-between">
-        {/* Brand */}
-        <NavbarLogo settings={settings} currentLocale={currentLocale} />
+      <div className="container mx-auto px-2 sm:px-4 h-16 sm:h-20 flex items-center justify-between w-full" dir="ltr">
+        {/* Left Side: Brand and Desktop Phone */}
+        <div className="flex shrink-0 items-center gap-2">
+          <NavbarLogo settings={settings} currentLocale={currentLocale} />
+          {settings.contactPhone && (
+            <a href={`tel:${settings.contactPhone}`} className="hidden lg:flex items-center gap-2 text-current font-bold hover:text-brand-teal transition-colors" dir="ltr">
+              <FiPhone className="w-5 h-5" />
+              <span className="text-sm">{settings.contactPhone}</span>
+            </a>
+          )}
+        </div>
 
-        {/* Desktop Menu */}
-        <DesktopNavMenu 
-          navLinks={navLinks}
-          user={user}
-          isAdmin={isAdmin}
-          isAdminLoading={isAdminLoading}
-          currentLocale={currentLocale}
-          t={t}
-        />
+        {/* Center: Mobile Phone */}
+        {settings.contactPhone && (
+          <div className="flex shrink justify-center lg:hidden truncate px-1">
+            <a href={`tel:${settings.contactPhone}`} className="flex items-center gap-1 sm:gap-1.5 text-current font-bold hover:text-brand-teal transition-colors truncate" dir="ltr">
+              <FiPhone className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+              <span className="text-xs sm:text-sm font-bold truncate">{settings.contactPhone}</span>
+            </a>
+          </div>
+        )}
 
-        {/* Actions */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          {settings.enableMultiLanguage && <LanguageSwitcher currentLocale={currentLocale} />}
-          {settings.enableDarkMode && <DarkModeToggle />}
-
+        {/* Right Side: Actions & Desktop Menu */}
+        <div className="flex shrink-0 items-center justify-end gap-1.5 sm:gap-3" dir={currentLocale === 'ar' ? 'rtl' : 'ltr'}>
           {/* Book Now CTA */}
           <Link
             href={`/${currentLocale}/booking`}
@@ -150,13 +156,13 @@ export default function Navbar({ settings, currentLocale = 'ar' }: { settings: P
             <div className="relative">
               <button
                 onClick={() => setShowMenu(!showMenu)}
-                className="flex items-center gap-2 bg-current/5 hover:bg-current/10 border border-current/10 rounded-full pl-4 pr-1 py-1 transition-colors text-current"
+                className="flex items-center gap-1.5 sm:gap-2 bg-current/5 hover:bg-current/10 border border-current/10 rounded-full pl-2 sm:pl-4 pr-1 py-1 transition-colors text-current shrink-0"
               >
                 <span className="font-medium text-sm hidden sm:block">{user.displayName?.split(' ')[0] || t.profile}</span>
                 {user.photoURL ? (
-                  <img src={user.photoURL} className="w-9 h-9 rounded-full" referrerPolicy="no-referrer" alt="avatar" />
+                  <Image src={user.photoURL} className="w-7 h-7 sm:w-9 sm:h-9 rounded-full shrink-0" referrerPolicy="no-referrer" alt="avatar" width={36} height={36} loading="lazy" />
                 ) : (
-                  <div className="w-9 h-9 rounded-full bg-current/20 flex items-center justify-center font-bold text-sm">
+                  <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-current/20 flex items-center justify-center font-bold text-xs sm:text-sm shrink-0">
                     {(user.displayName || 'U')[0]}
                   </div>
                 )}
@@ -189,15 +195,34 @@ export default function Navbar({ settings, currentLocale = 'ar' }: { settings: P
           ) : (
             <Link
               href={`/${currentLocale}/login`}
-              className="bg-current/10 hover:bg-current/20 border border-current/10 px-4 py-2 rounded-xl font-bold transition-all text-sm flex items-center gap-2 group text-current"
+              className="bg-current/10 hover:bg-current/20 border border-current/10 px-2 sm:px-4 py-1.5 sm:py-2 rounded-xl font-bold transition-all text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 group text-current shrink-0"
+              title={t.login}
             >
-              <FiLogIn className="group-hover:scale-110 transition-transform" /> {t.login}
+              <FiLogIn className="group-hover:scale-110 transition-transform w-4 h-4 sm:w-5 sm:h-5" /> 
+              <span className="hidden min-[400px]:block">{t.login}</span>
             </Link>
           )}
 
+          {/* Desktop Menu */}
+          <div className="hidden lg:block ml-2 sm:ml-4 border-l border-current/10 pl-2 sm:pl-4">
+            <DesktopNavMenu 
+              navLinks={navLinks}
+              user={user}
+              isAdmin={isAdmin}
+              isAdminLoading={isAdminLoading}
+              currentLocale={currentLocale}
+              t={t}
+            />
+          </div>
+
+          <div className="hidden sm:flex items-center gap-2 sm:gap-3">
+            {settings.enableMultiLanguage && <LanguageSwitcher currentLocale={currentLocale} />}
+            {settings.enableDarkMode && <DarkModeToggle />}
+          </div>
+
           {/* Mobile Hamburger */}
           <button
-            className="lg:hidden p-2.5 rounded-xl hover:bg-current/10 transition-colors text-current"
+            className="lg:hidden p-1.5 sm:p-2.5 rounded-xl hover:bg-current/10 transition-colors text-current shrink-0"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="القائمة"
             id="mobile-menu-toggle"

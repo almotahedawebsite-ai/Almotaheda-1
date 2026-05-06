@@ -1,8 +1,7 @@
-import React from 'react';
 import { BaseEntity, EntityType } from '../../domain/types/entity';
 import { tField, TranslatableString } from '../../domain/types/settings';
 import { FieldFactory } from './FieldFactory';
-import { cookies } from 'next/headers';
+
 
 interface EntityRendererProps {
   entity: BaseEntity;

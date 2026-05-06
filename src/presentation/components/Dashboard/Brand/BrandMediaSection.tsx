@@ -1,16 +1,14 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import { SiteSettings } from '@/domain/types/settings';
 
 interface BrandMediaSectionProps {
   settings: Partial<SiteSettings>;
-  setSettings: Dispatch<SetStateAction<Partial<SiteSettings>>>;
   uploadMediaImage: (e: React.ChangeEvent<HTMLInputElement>, key: 'heroImage' | 'aboutImage', successMsg: string) => Promise<void>;
   removeMediaImage: (key: 'heroImage' | 'aboutImage', successMsg: string) => Promise<void>;
 }
 
 export default function BrandMediaSection({
   settings,
-  setSettings,
   uploadMediaImage,
   removeMediaImage
 }: BrandMediaSectionProps) {

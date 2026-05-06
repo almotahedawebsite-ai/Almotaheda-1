@@ -1,5 +1,5 @@
-import { EntityType, CustomFieldDefinition } from '../../domain/types';
-import { eventBus } from '../events/EventBus';
+import { CustomFieldDefinition } from '../../domain/types';
+
 
 /**
  * 2. MODULE DISCOVERY & REGISTRATION SYSTEM

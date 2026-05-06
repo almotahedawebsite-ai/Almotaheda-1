@@ -1,4 +1,4 @@
-import { BaseEntity } from '../../domain/types';
+
 
 /**
  * 5. ENTERPRISE SCHEMA (LAZY) MIGRATION

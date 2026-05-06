@@ -15,7 +15,7 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
   const services = await repo.getActive();
 
   return (
-    <div className="pt-20 animate-fade-in-up">
+    <div className="animate-fade-in-up">
       {/* Header */}
       <section className="py-20 flex items-center justify-center text-white text-center relative overflow-hidden min-h-[40vh]">
         {/* Background Layering */}

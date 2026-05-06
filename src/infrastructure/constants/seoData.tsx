@@ -1,6 +1,5 @@
-import React from 'react';
 import { 
-  FiSearch, FiFileText, FiImage, FiBriefcase, FiTrendingUp, FiPenTool, FiEdit3, FiMap, FiStar
+  FiSearch, FiFileText, FiImage, FiBriefcase, FiTrendingUp, FiPenTool, FiEdit3, FiMap
 } from 'react-icons/fi';
 
 export const seoSteps = [

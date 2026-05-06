@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import {  useState  } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { 
-  FiSearch, FiFileText, FiImage, FiBriefcase, FiTrendingUp, FiPenTool, FiEdit3, FiMap,
+  FiSearch, FiFileText, FiImage, FiBriefcase, FiTrendingUp, FiEdit3, FiMap,
   FiBookOpen, FiCheckCircle, FiInfo, FiZap, FiList, FiStar, FiClipboard, FiClock, FiMapPin,
   FiChevronDown, FiArrowLeft, FiCheck
 } from 'react-icons/fi';
