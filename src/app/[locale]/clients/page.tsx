@@ -30,10 +30,12 @@ const CATEGORY_ORDER = ['hotels', 'government', 'military', 'malls', 'universiti
 export default async function ClientsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const repo = new ServerKeyClientRepository();
-  const clients = await repo.getActive();
-
   const settingsRepo = new ServerSettingsRepository();
-  const settings = await settingsRepo.getGlobalSettings();
+
+  const [clients, settings] = await Promise.all([
+    repo.getActive(),
+    settingsRepo.getGlobalSettings()
+  ]);
 
   const places = settings?.topRequestedPlaces ?? [];
   const grouped = places.reduce<Record<string, { ar: string; en: string; category?: string }[]>>(

@@ -17,16 +17,16 @@ import SocialMediaSection from '@/presentation/components/Home/SocialMediaSectio
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const settingsRepo = new ServerSettingsRepository();
-  const settings = await settingsRepo.getGlobalSettings();
-
   const serviceRepo = new ServerServiceRepository();
-  const services = await serviceRepo.getActive();
-
   const clientRepo = new ServerKeyClientRepository();
-  const clients = await clientRepo.getActive();
-
   const branchRepo = new ServerBranchRepository();
-  const branches = await branchRepo.getActive();
+
+  const [settings, services, clients, branches] = await Promise.all([
+    settingsRepo.getGlobalSettings(),
+    serviceRepo.getActive(),
+    clientRepo.getActive(),
+    branchRepo.getActive()
+  ]);
 
   return (
     <div>
