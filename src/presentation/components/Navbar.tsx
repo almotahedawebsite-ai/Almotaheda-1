@@ -204,7 +204,7 @@ export default function Navbar({ settings, currentLocale = 'ar' }: { settings: P
           )}
 
           {/* Desktop Menu */}
-          <div className="hidden lg:block ml-2 sm:ml-4 border-l border-current/10 pl-2 sm:pl-4">
+          <div className="hidden lg:block ml-2 sm:ml-4">
             <DesktopNavMenu 
               navLinks={navLinks}
               user={user}

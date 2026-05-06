@@ -18,7 +18,7 @@ export default function NavbarLogo({
           م
         </div>
       )}
-      <div className="hidden sm:block text-current">
+      <div className="hidden text-current">
         <span className="font-black text-2xl tracking-tight block leading-tight">
           {tField(settings.siteName, currentLocale) || 'المتحدة'}
         </span>

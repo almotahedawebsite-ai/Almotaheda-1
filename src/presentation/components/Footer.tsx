@@ -1,7 +1,7 @@
 'use client';
 
 import {  useEffect, useState  } from 'react';
-import Image from 'next/image';
+
 import Link from 'next/link';
 import { SiteSettings, tField } from '@/domain/types/settings';
 import { auth } from '@/infrastructure/firebase/config';
@@ -42,7 +42,7 @@ export default function Footer({ settings, currentLocale = 'ar' }: { settings: P
           <div className="col-span-2 lg:col-span-1 space-y-6">
             <Link href="/" className="flex items-center gap-3">
               {settings.logoUrl ? (
-                <Image src={settings.logoUrl} alt="Logo" width={48} height={48} className="h-12 w-auto brightness-0 invert opacity-80" loading="lazy" />
+                <img src={settings.logoUrl} alt="Logo" className="h-12 w-auto object-contain brightness-0 invert opacity-80" loading="lazy" />
               ) : (
                 <div className="w-12 h-12 bg-gradient-to-br from-brand-teal to-white/20 rounded-2xl flex items-center justify-center text-white font-black text-xl">
                   م
