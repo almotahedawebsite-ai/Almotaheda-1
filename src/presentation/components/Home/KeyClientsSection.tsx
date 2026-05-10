@@ -153,6 +153,7 @@ export default function KeyClientsSection({
                     width={80}
                     height={80}
                     className="mx-auto mb-4 object-contain rounded-2xl"
+                    style={{ width: 'auto', height: 'auto', maxWidth: '80px', maxHeight: '80px' }}
                     loading="lazy"
                     quality={70}
                   />

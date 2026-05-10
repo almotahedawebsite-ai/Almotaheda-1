@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { tField } from '@/domain/types/settings';
 import { FiArrowLeft, FiPhone } from 'react-icons/fi';
 
-export default function HeroSection({ settings, locale }: { settings: any; locale: string }) {
+export default function HeroSection({ settings, locale, servicesCount }: { settings: any; locale: string; servicesCount?: number }) {
   const heroImage = settings.heroImage || 'https://res.cloudinary.com/dsr72hebx/image/upload/v1775240899/hero_hhzeus.jpg';
 
   return (
@@ -75,7 +75,7 @@ export default function HeroSection({ settings, locale }: { settings: any; local
         <div className="pt-4 sm:pt-8 md:pt-12 grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4 max-w-3xl mx-auto">
           {[
             { num: '+500', label: locale === 'ar' ? 'عميل سعيد' : 'Happy Clients' },
-            { num: '+16', label: locale === 'ar' ? 'خدمة متكاملة' : 'Services' },
+            { num: servicesCount ? `+${servicesCount}` : '+16', label: locale === 'ar' ? 'خدمة متكاملة' : 'Services' },
             { num: '24/7', label: locale === 'ar' ? 'دعم متواصل' : 'Support' },
             { num: '+10', label: locale === 'ar' ? 'سنوات خبرة' : 'Years Experience' },
           ].map((stat, idx) => (

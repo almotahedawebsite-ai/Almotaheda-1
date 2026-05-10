@@ -6,6 +6,7 @@ import { ServerBranchRepository } from '@/infrastructure/repositories/server/Ser
 import HeroSection from '@/presentation/components/Home/HeroSection';
 import IntroSection from '@/presentation/components/Home/IntroSection';
 import ServicesSection from '@/presentation/components/Home/ServicesSection';
+import LaborSupplySection from '@/presentation/components/Home/LaborSupplySection';
 import KeyClientsSection from '@/presentation/components/Home/KeyClientsSection';
 import WhyUsSection from '@/presentation/components/Home/WhyUsSection';
 import BranchesSection from '@/presentation/components/Home/BranchesSection';
@@ -30,9 +31,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   return (
     <div>
-      <HeroSection settings={settings} locale={locale} />
+      <HeroSection settings={settings} locale={locale} servicesCount={services.length} />
       <IntroSection locale={locale} />
       <ServicesSection services={services} locale={locale} />
+      <LaborSupplySection locale={locale} />
       <KeyClientsSection clients={clients} locale={locale} settings={settings} />
       <WhyUsSection locale={locale} />
       <BranchesSection branches={branches} locale={locale} />
