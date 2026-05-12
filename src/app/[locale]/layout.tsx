@@ -8,7 +8,10 @@ import { Providers } from '@/presentation/components/Providers';
 import { tField } from '@/domain/types/settings';
 import { LoadingProvider } from '@/presentation/components/LoadingProvider';
 import Script from 'next/script';
-import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';const almarai = Almarai({
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
+import PixelTracker from '@/presentation/components/PixelTracker';
+
+const almarai = Almarai({
   subsets: ['arabic'],
   weight: ['400', '700'],
   variable: '--font-almarai',
@@ -172,7 +175,7 @@ export default async function RootLayout({
 
         {/* Meta / Facebook Pixel */}
         {settings.metaPixelId && settings.metaPixelId.trim() !== '' && (
-          <Script id="meta-pixel" strategy="lazyOnload">
+          <Script id="meta-pixel" strategy="afterInteractive">
             {`
               !function(f,b,e,v,n,t,s)
               {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -190,7 +193,7 @@ export default async function RootLayout({
 
         {/* TikTok Pixel */}
         {settings.tiktokPixelId && settings.tiktokPixelId.trim() !== '' && (
-          <Script id="tiktok-pixel" strategy="lazyOnload">
+          <Script id="tiktok-pixel" strategy="afterInteractive">
             {`
               !function (w, d, t) {
                 w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t._i.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i.length-1;e>=0;e--)if(ttq._i[e]._u===t)return ttq._i[e];return null},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||[],ttq._i.push({_u:e,_t:Date.now(),_o:ttq._o,_h:ttq._h,_v:"1.0.0",partner:o}),ttq._o=ttq._o||{},ttq._h=ttq._h||{};var a=d.createElement("script");a.type="text/javascript",a.async=!0,a.src=r+"?sdkid="+e;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(a,s)};
@@ -203,7 +206,7 @@ export default async function RootLayout({
 
         {/* Snapchat Pixel */}
         {settings.snapchatPixelId && settings.snapchatPixelId.trim() !== '' && (
-          <Script id="snapchat-pixel" strategy="lazyOnload">
+          <Script id="snapchat-pixel" strategy="afterInteractive">
             {`
               (function(e,t,n){if(e.snaptr)return;var a=e.snaptr=function()
               {a.handleRequest?a.handleRequest.apply(a,arguments):a.queue.push(arguments)};
@@ -216,6 +219,12 @@ export default async function RootLayout({
             `}
           </Script>
         )}
+
+        <PixelTracker 
+          metaPixelId={settings.metaPixelId} 
+          tiktokPixelId={settings.tiktokPixelId} 
+          snapchatPixelId={settings.snapchatPixelId} 
+        />
       </body>
     </html>
   );

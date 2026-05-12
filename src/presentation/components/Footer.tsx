@@ -71,6 +71,7 @@ export default function Footer({ settings, currentLocale = 'ar' }: { settings: P
               <li><Link href={`/${currentLocale}/services`} className="hover:text-brand-teal transition-colors">خدماتنا</Link></li>
               <li><Link href={`/${currentLocale}/clients`} className="hover:text-brand-teal transition-colors">شركاء النجاح</Link></li>
               <li><Link href={`/${currentLocale}/branches`} className="hover:text-brand-teal transition-colors">فروعنا</Link></li>
+              <li><Link href={`/${currentLocale}/faq`} className="hover:text-brand-teal transition-colors">الأسئلة الشائعة</Link></li>
               <li><Link href={`/${currentLocale}/about`} className="hover:text-brand-teal transition-colors">من نحن</Link></li>
               <li><Link href={`/${currentLocale}/booking`} className="flex items-center gap-2 hover:text-brand-teal transition-colors font-bold group"><FiCalendar className="group-hover:scale-110 transition-transform" /> احجز الآن</Link></li>
               <li>
