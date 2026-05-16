@@ -47,7 +47,7 @@ export default function ContactForm() {
         value={formData.name}
         onChange={e => setFormData({...formData, name: e.target.value})}
         className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl mb-4 focus:ring-2 focus:ring-[var(--primary)] outline-none" 
-        placeholder="الاسم الكريم *" 
+        placeholder="الاسم *" 
       />
       
       <div className="flex gap-4 mb-4">

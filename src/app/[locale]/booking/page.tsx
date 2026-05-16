@@ -164,13 +164,13 @@ export default function BookingPage() {
               )}
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">{locale === 'ar' ? 'الاسم الكامل *' : 'Full Name *'}</label>
+                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1.5">{locale === 'ar' ? 'الاسم *' : 'Full Name *'}</label>
                 <input
                   type="text"
                   value={form.customerName}
                   onChange={(e) => setForm(prev => ({ ...prev, customerName: e.target.value }))}
                   className="w-full border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-brand-teal/20 focus:border-brand-teal outline-none transition-all text-gray-900 dark:text-white"
-                  placeholder={locale === 'ar' ? 'أدخل اسمك الكامل' : 'Enter your full name'}
+                  placeholder={locale === 'ar' ? 'الاسم' : 'Enter your full name'}
                 />
               </div>
 
@@ -193,7 +193,7 @@ export default function BookingPage() {
                   value={form.customerAddress}
                   onChange={(e) => setForm(prev => ({ ...prev, customerAddress: e.target.value }))}
                   className="w-full border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-brand-teal/20 focus:border-brand-teal outline-none transition-all text-gray-900 dark:text-white"
-                  placeholder={locale === 'ar' ? 'أدخل العنوان بالتفصيل' : 'Enter your detailed address'}
+                  placeholder={locale === 'ar' ? 'العنوان' : 'Enter your detailed address'}
                 />
               </div>
 

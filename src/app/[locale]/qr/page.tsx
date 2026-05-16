@@ -1,9 +1,11 @@
 import React from 'react';
 import { ServerSettingsRepository } from '@/infrastructure/repositories/server/ServerSettingsRepository';
 import { tField } from '@/domain/types/settings';
-import { FiPhone, FiMail, FiMapPin, FiGlobe, FiExternalLink } from 'react-icons/fi';
+import { ServerKeyClientRepository } from '@/infrastructure/repositories/server/ServerKeyClientRepository';
+import { FiPhone, FiMail, FiMapPin, FiGlobe, FiExternalLink, FiBriefcase } from 'react-icons/fi';
 import { FaWhatsapp, FaFacebook, FaInstagram, FaTiktok, FaSnapchatGhost, FaYoutube, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const SOCIAL_ICONS: Record<string, React.ReactNode> = {
   facebook: <FaFacebook />,
@@ -30,7 +32,12 @@ const SOCIAL_COLORS: Record<string, string> = {
 export default async function QRLandingPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const settingsRepo = new ServerSettingsRepository();
-  const settings = await settingsRepo.getGlobalSettings();
+  const clientRepo = new ServerKeyClientRepository();
+  
+  const [settings, clients] = await Promise.all([
+    settingsRepo.getGlobalSettings(),
+    clientRepo.getActive()
+  ]);
 
   const whatsappNumber = (settings.contactWhatsapp || settings.whatsappCta || '').replace(/[^0-9]/g, '');
 
@@ -173,10 +180,45 @@ export default async function QRLandingPage({ params }: { params: Promise<{ loca
         {/* Book Now CTA */}
         <Link
           href={`/${locale}/booking`}
-          className="block w-full bg-gradient-to-r from-brand-teal to-green-500 text-white text-center py-4 rounded-2xl font-black text-lg hover:shadow-2xl hover:shadow-brand-teal/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
+          className="block w-full bg-gradient-to-r from-brand-teal to-green-500 text-white text-center py-4 rounded-2xl font-black text-lg hover:shadow-2xl hover:shadow-brand-teal/30 transition-all hover:scale-[1.02] active:scale-[0.98] mb-8"
         >
           احجز خدمتك الآن
         </Link>
+
+        {/* Success Partners */}
+        {clients && clients.length > 0 && (
+          <div className="mb-8 bg-white/5 border border-white/10 rounded-3xl p-6">
+            <div className="flex items-center justify-center gap-2 mb-6">
+              <FiBriefcase className="text-brand-teal text-xl" />
+              <h2 className="text-white font-black text-lg">
+                {locale === 'ar' ? 'شركاء النجاح' : 'Our Key Clients'}
+              </h2>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              {clients.map((client) => (
+                <div key={client.id} className="bg-white/10 rounded-2xl p-3 flex flex-col items-center justify-center gap-2 hover:bg-white/20 transition-colors min-h-[100px]">
+                  {(client.logo || client.image) ? (
+                    <Image
+                      src={client.logo || client.image || ''}
+                      alt={tField(client.name, locale)}
+                      width={48}
+                      height={48}
+                      className="object-contain"
+                      style={{ width: 'auto', height: 'auto', maxWidth: '48px', maxHeight: '48px' }}
+                    />
+                  ) : (
+                    <div className="w-[48px] h-[48px] flex items-center justify-center bg-white/5 rounded-xl shrink-0">
+                      <FiBriefcase className="text-white/20 text-xl" />
+                    </div>
+                  )}
+                  <span className="text-[10px] text-white/70 text-center font-bold leading-tight line-clamp-2 w-full">
+                    {tField(client.name, locale)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Footer */}
         <p className="text-center text-white/20 text-xs mt-8 font-bold">
