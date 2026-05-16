@@ -147,15 +147,11 @@ export default function KeyClientsSection({
                 style={{ animationDelay: `${idx * 0.1}s` }}
               >
                 {(client.logo || client.image) ? (
-                  <Image
+                  <img
                     src={client.logo || client.image || ''}
                     alt={tField(client.name, locale)}
-                    width={80}
-                    height={80}
-                    className="mx-auto mb-4 object-contain rounded-2xl"
-                    style={{ width: 'auto', height: 'auto', maxWidth: '80px', maxHeight: '80px' }}
                     loading="lazy"
-                    quality={70}
+                    className="w-20 h-20 mx-auto mb-4 object-contain rounded-2xl"
                   />
                 ) : (
                   <div className="w-20 h-20 mx-auto mb-4 bg-white/10 rounded-2xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">

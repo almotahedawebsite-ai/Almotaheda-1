@@ -198,13 +198,10 @@ export default async function QRLandingPage({ params }: { params: Promise<{ loca
               {clients.map((client) => (
                 <div key={client.id} className="bg-white/10 rounded-2xl p-3 flex flex-col items-center justify-center gap-2 hover:bg-white/20 transition-colors min-h-[100px]">
                   {(client.logo || client.image) ? (
-                    <Image
+                    <img
                       src={client.logo || client.image || ''}
                       alt={tField(client.name, locale)}
-                      width={48}
-                      height={48}
-                      className="object-contain"
-                      style={{ width: 'auto', height: 'auto', maxWidth: '48px', maxHeight: '48px' }}
+                      className="w-12 h-12 object-contain"
                     />
                   ) : (
                     <div className="w-[48px] h-[48px] flex items-center justify-center bg-white/5 rounded-xl shrink-0">
