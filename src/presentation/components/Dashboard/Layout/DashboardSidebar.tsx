@@ -3,7 +3,7 @@ import { usePathname } from 'next/navigation';
 import { 
   FiPieChart, FiLayers, FiStar, FiMap, FiList, FiFileText, 
   FiEdit3, FiPenTool, FiShield, FiInbox, FiUsers, FiSettings, FiSearch, 
-  FiTrendingUp, FiBookOpen, FiLogOut 
+  FiTrendingUp, FiBookOpen, FiLogOut, FiImage 
 } from 'react-icons/fi';
 
 interface DashboardSidebarProps {
@@ -20,6 +20,7 @@ export default function DashboardSidebar({ currentLocale, handleLogout, setSideb
     { href: `/${currentLocale}/dashboard`, icon: <FiPieChart />, label: 'الرئيسية (Overview)' },
     { href: `/${currentLocale}/dashboard/services`, icon: <FiLayers />, label: 'إدارة الخدمات' },
     { href: `/${currentLocale}/dashboard/key-clients`, icon: <FiStar />, label: 'أهم شركاء النجاح' },
+    { href: `/${currentLocale}/dashboard/before-after`, icon: <FiImage />, label: 'صور قبل وبعد' },
     { href: `/${currentLocale}/dashboard/branches`, icon: <FiMap />, label: 'إدارة الفروع' },
     { href: `/${currentLocale}/dashboard/bookings`, icon: <FiList />, label: 'إدارة الحجوزات' },
     { href: `/${currentLocale}/dashboard/contracts`, icon: <FiFileText />, label: 'التعاقدات' },

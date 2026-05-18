@@ -2,6 +2,7 @@ import { ServerSettingsRepository } from '@/infrastructure/repositories/server/S
 import { ServerServiceRepository } from '@/infrastructure/repositories/server/ServerServiceRepository';
 import { ServerKeyClientRepository } from '@/infrastructure/repositories/server/ServerKeyClientRepository';
 import { ServerBranchRepository } from '@/infrastructure/repositories/server/ServerBranchRepository';
+import { ServerBeforeAfterRepository } from '@/infrastructure/repositories/server/ServerBeforeAfterRepository';
 
 import HeroSection from '@/presentation/components/Home/HeroSection';
 import IntroSection from '@/presentation/components/Home/IntroSection';
@@ -14,6 +15,7 @@ import ConsultationSection from '@/presentation/components/Home/ConsultationSect
 import ContactSection from '@/presentation/components/Home/ContactSection';
 import ContactInfoSection from '@/presentation/components/Home/ContactInfoSection';
 import SocialMediaSection from '@/presentation/components/Home/SocialMediaSection';
+import BeforeAfterSection from '@/presentation/components/Home/BeforeAfterSection';
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -21,13 +23,18 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const serviceRepo = new ServerServiceRepository();
   const clientRepo = new ServerKeyClientRepository();
   const branchRepo = new ServerBranchRepository();
+  const beforeAfterRepo = new ServerBeforeAfterRepository();
 
-  const [settings, services, clients, branches] = await Promise.all([
+  const [settings, services, clients, branches, allBeforeAfter] = await Promise.all([
     settingsRepo.getGlobalSettings(),
     serviceRepo.getActive(),
     clientRepo.getActive(),
-    branchRepo.getActive()
+    branchRepo.getActive(),
+    beforeAfterRepo.getActive()
   ]);
+
+  // Shuffle and limit to 12
+  const shuffledBeforeAfter = [...allBeforeAfter].sort(() => 0.5 - Math.random()).slice(0, 12);
 
   return (
     <div>
@@ -35,6 +42,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <IntroSection locale={locale} />
       <ServicesSection services={services} locale={locale} />
       <LaborSupplySection locale={locale} />
+      <BeforeAfterSection images={shuffledBeforeAfter} locale={locale} />
       <KeyClientsSection clients={clients} locale={locale} settings={settings} />
       <WhyUsSection locale={locale} />
       <BranchesSection branches={branches} locale={locale} />

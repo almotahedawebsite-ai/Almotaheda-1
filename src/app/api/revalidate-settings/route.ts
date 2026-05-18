@@ -9,6 +9,7 @@ export async function POST() {
     revalidateTag('key_clients', 'max');
     revalidateTag('branches', 'max');
     revalidateTag('entities', 'max');
+    revalidateTag('before_after_images', 'max');
     return NextResponse.json({ revalidated: true, timestamp: Date.now() });
   } catch (err) {
     return NextResponse.json({ revalidated: false, error: String(err) }, { status: 500 });

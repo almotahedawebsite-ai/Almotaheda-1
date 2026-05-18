@@ -5,7 +5,7 @@ import { ServerKeyClientRepository } from '@/infrastructure/repositories/server/
 import { FiPhone, FiMail, FiMapPin, FiGlobe, FiExternalLink, FiBriefcase } from 'react-icons/fi';
 import { FaWhatsapp, FaFacebook, FaInstagram, FaTiktok, FaSnapchatGhost, FaYoutube, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import Link from 'next/link';
-import Image from 'next/image';
+
 
 const SOCIAL_ICONS: Record<string, React.ReactNode> = {
   facebook: <FaFacebook />,

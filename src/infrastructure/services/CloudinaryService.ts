@@ -26,8 +26,8 @@ export class CloudinaryService {
     const data = await response.json();
     
     // Convert the returned URL to explicitly serve as WebP with automatic quality optimization
-    // Example: https://res.cloudinary.com/.../image/upload/v123.../img.jpg -> .../upload/f_webp,q_auto/v123.../img.jpg
-    const optimizedUrl = data.secure_url.replace('/upload/', '/upload/f_webp,q_auto/');
+    // Ensure maximum quality
+    const optimizedUrl = data.secure_url.replace('/upload/', '/upload/f_webp,q_100/');
     
     return optimizedUrl;
   }
