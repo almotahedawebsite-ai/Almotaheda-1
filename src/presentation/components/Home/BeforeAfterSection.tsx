@@ -27,14 +27,15 @@ export default function BeforeAfterSection({ images }: Props) {
       <div className="absolute inset-y-0 left-0 w-12 md:w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
       <div className="absolute inset-y-0 right-0 w-12 md:w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
 
-      <div className="flex w-max animate-infinite-scroll hover:[animation-play-state:paused] gap-6 px-3">
+      <div className="flex w-max animate-infinite-scroll hover:[animation-play-state:paused] gap-2 px-2">
         {/* First set of images */}
         {displayImages.map((img, index) => {
-          const highResUrl = img.imageUrl.replace('q_auto', 'q_100');
+          // Compress images on the fly to improve performance
+          const optimizedUrl = img.imageUrl.replace('q_100', 'q_auto:good').replace('q_auto', 'q_auto:good');
           return (
             <div key={`first-${img.id}-${index}`} className="w-[90vw] sm:w-[500px] md:w-[600px] lg:w-[700px] shrink-0 transition-transform duration-500 hover:scale-[1.02]">
               <img 
-                src={highResUrl} 
+                src={optimizedUrl} 
                 alt="Before After" 
                 className="w-full h-auto max-h-[800px] object-contain rounded-2xl shadow-sm border border-gray-100 bg-gray-50"
               />
@@ -43,11 +44,12 @@ export default function BeforeAfterSection({ images }: Props) {
         })}
         {/* Second set of images (for seamless looping) */}
         {displayImages.map((img, index) => {
-          const highResUrl = img.imageUrl.replace('q_auto', 'q_100');
+          // Compress images on the fly to improve performance
+          const optimizedUrl = img.imageUrl.replace('q_100', 'q_auto:good').replace('q_auto', 'q_auto:good');
           return (
             <div key={`second-${img.id}-${index}`} className="w-[90vw] sm:w-[500px] md:w-[600px] lg:w-[700px] shrink-0 transition-transform duration-500 hover:scale-[1.02]">
               <img 
-                src={highResUrl} 
+                src={optimizedUrl} 
                 alt="Before After" 
                 className="w-full h-auto max-h-[800px] object-contain rounded-2xl shadow-sm border border-gray-100 bg-gray-50"
               />
@@ -59,17 +61,17 @@ export default function BeforeAfterSection({ images }: Props) {
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes infinite-scroll {
           0% { transform: translateX(0); }
-          100% { transform: translateX(calc(-50% - 0.75rem)); } /* -50% because we duplicated the array, -0.75rem for half the gap */
+          100% { transform: translateX(calc(-50% - 0.25rem)); } /* -50% because we duplicated the array, -0.25rem for half the gap-2 */
         }
         .animate-infinite-scroll {
-          animation: infinite-scroll 40s linear infinite;
+          animation: infinite-scroll 80s linear infinite;
         }
         [dir="rtl"] .animate-infinite-scroll {
-          animation: infinite-scroll-rtl 40s linear infinite;
+          animation: infinite-scroll-rtl 80s linear infinite;
         }
         @keyframes infinite-scroll-rtl {
           0% { transform: translateX(0); }
-          100% { transform: translateX(calc(50% + 0.75rem)); }
+          100% { transform: translateX(calc(50% + 0.25rem)); }
         }
       `}} />
     </div>
