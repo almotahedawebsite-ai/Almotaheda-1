@@ -108,21 +108,24 @@ export default function BeforeAfterSection({ images }: Props) {
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {images.map((img, index) => {
-          // Compress images on the fly to improve performance
-          const optimizedUrl = img.imageUrl.replace('q_100', 'q_auto:good').replace('q_auto', 'q_auto:good');
+          // Use Cloudinary crop to remove the header (top 28%) and footer (bottom 14%)
+          // Leaving exactly the 58% middle portion containing the before/after photos
+          const croppedUrl = img.imageUrl.replace('/upload/', '/upload/c_crop,w_1.0,h_0.58,y_0.28/');
+          // Compress images on the fly to improve performance for slider
+          const sliderOptimizedUrl = croppedUrl.replace('q_100', 'q_auto:good').replace('q_auto', 'q_auto:good');
           
           return (
             <div 
               key={`img-${img.id}-${index}`} 
               className="snap-center shrink-0 cursor-pointer"
-              onClick={() => handleImageClick(img.imageUrl.replace('q_auto', 'q_100'))}
+              onClick={() => handleImageClick(croppedUrl.replace('q_auto', 'q_100'))}
             >
               <img 
-                src={optimizedUrl} 
+                src={sliderOptimizedUrl} 
                 alt="Before After" 
                 loading="lazy"
                 onDragStart={(e) => e.preventDefault()}
-                className="h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] w-auto object-cover rounded-2xl shadow-sm border border-gray-100 transition-transform duration-500 hover:scale-[1.01] pointer-events-none"
+                className="h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] w-auto aspect-square object-contain rounded-2xl shadow-sm border border-gray-100 transition-transform duration-500 hover:scale-[1.01] pointer-events-none"
               />
             </div>
           );
