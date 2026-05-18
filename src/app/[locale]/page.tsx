@@ -33,16 +33,16 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     beforeAfterRepo.getActive()
   ]);
 
-  // Shuffle and limit to 12
-  const shuffledBeforeAfter = [...allBeforeAfter].sort(() => 0.5 - Math.random()).slice(0, 12);
+  // Shuffle and allow up to 50 images since we have lazy loading
+  const shuffledBeforeAfter = [...allBeforeAfter].sort(() => 0.5 - Math.random()).slice(0, 50);
 
   return (
     <div>
       <HeroSection settings={settings} locale={locale} servicesCount={services.length} />
       <IntroSection locale={locale} />
+      <BeforeAfterSection images={shuffledBeforeAfter} />
       <ServicesSection services={services} locale={locale} />
       <LaborSupplySection locale={locale} />
-      <BeforeAfterSection images={shuffledBeforeAfter} locale={locale} />
       <KeyClientsSection clients={clients} locale={locale} settings={settings} />
       <WhyUsSection locale={locale} />
       <BranchesSection branches={branches} locale={locale} />
