@@ -78,9 +78,6 @@ export default function BeforeAfterSection({ images }: Props) {
         <h2 className="text-3xl md:text-5xl font-black text-brand-navy mb-4 leading-tight">
           سابقة الأعمال (قبل وبعد)
         </h2>
-        <p className="text-gray-600 text-lg">
-          شاهد الفرق الواضح في جودة خدماتنا قبل وبعد التنفيذ
-        </p>
       </div>
 
       {/* Navigation Arrows */}
