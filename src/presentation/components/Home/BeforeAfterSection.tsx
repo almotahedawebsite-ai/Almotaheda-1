@@ -73,7 +73,16 @@ export default function BeforeAfterSection({ images }: Props) {
   };
 
   return (
-    <div className="w-full bg-white py-12 relative group">
+    <div className="w-full bg-white py-16 relative group">
+      <div className="max-w-7xl mx-auto px-4 mb-12 text-center">
+        <h2 className="text-3xl md:text-5xl font-black text-brand-navy mb-4 leading-tight">
+          سابقة الأعمال (قبل وبعد)
+        </h2>
+        <p className="text-gray-600 text-lg">
+          شاهد الفرق الواضح في جودة خدماتنا قبل وبعد التنفيذ
+        </p>
+      </div>
+
       {/* Navigation Arrows */}
       <button 
         onClick={scrollRight}
