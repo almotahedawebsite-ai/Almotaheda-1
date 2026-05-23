@@ -1,163 +1,122 @@
-"use client";
+'use client';
 
-import { BeforeAfterImage } from '@/domain/types/beforeAfter';
-import { useRef, useState } from 'react';
-import { FiChevronRight, FiChevronLeft, FiX } from 'react-icons/fi';
+import { useRef } from 'react';
 
-interface Props {
-  images: BeforeAfterImage[];
-  locale?: string;
-}
+export default function BeforeAfterSection({ locale }: { locale: string }) {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-export default function BeforeAfterSection({ images }: Props) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const isDown = useRef(false);
-  const startX = useRef(0);
-  const scrollLeftPos = useRef(0);
-  const dragDistance = useRef(0);
-  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+  const images = [
+    'https://res.cloudinary.com/dsr72hebx/image/upload/c_crop,w_1.0,h_0.58,y_0.28/f_webp,q_auto:good/v1779117780/7_hrd2dj.jpg',
+    'https://res.cloudinary.com/dsr72hebx/image/upload/c_crop,w_1.0,h_0.58,y_0.28/f_webp,q_auto:good/v1779118089/8_oa7n8a.jpg',
+    'https://res.cloudinary.com/dsr72hebx/image/upload/c_crop,w_1.0,h_0.58,y_0.28/f_webp,q_auto:good/v1779117779/3_xpchf1.jpg',
+    'https://res.cloudinary.com/dsr72hebx/image/upload/c_crop,w_1.0,h_0.58,y_0.28/f_webp,q_auto:good/v1779118090/12_xehftp.jpg',
+    'https://res.cloudinary.com/dsr72hebx/image/upload/c_crop,w_1.0,h_0.58,y_0.28/f_webp,q_auto:good/v1779118113/20_qy14t5.jpg',
+    'https://res.cloudinary.com/dsr72hebx/image/upload/c_crop,w_1.0,h_0.58,y_0.28/f_webp,q_auto:good/v1779117779/2_bedm8e.jpg',
+    'https://res.cloudinary.com/dsr72hebx/image/upload/c_crop,w_1.0,h_0.58,y_0.28/f_webp,q_auto:good/v1779118088/13_oaq3uu.jpg',
+    'https://res.cloudinary.com/dsr72hebx/image/upload/c_crop,w_1.0,h_0.58,y_0.28/f_webp,q_auto:good/v1779118099/14_wetmge.jpg',
+    'https://res.cloudinary.com/dsr72hebx/image/upload/c_crop,w_1.0,h_0.58,y_0.28/f_webp,q_auto:good/v1779117765/5_o91rxy.jpg',
+    'https://res.cloudinary.com/dsr72hebx/image/upload/c_crop,w_1.0,h_0.58,y_0.28/f_webp,q_auto:good/v1779117778/4_wqt23z.jpg',
+    'https://res.cloudinary.com/dsr72hebx/image/upload/c_crop,w_1.0,h_0.58,y_0.28/f_webp,q_auto:good/v1779118107/16_rtx4q3.jpg',
+    'https://res.cloudinary.com/dsr72hebx/image/upload/c_crop,w_1.0,h_0.58,y_0.28/f_webp,q_auto:good/v1779117782/1_zal7cb.jpg',
+    'https://res.cloudinary.com/dsr72hebx/image/upload/c_crop,w_1.0,h_0.58,y_0.28/f_webp,q_auto:good/v1779118087/9_ngtmbz.jpg',
+    'https://res.cloudinary.com/dsr72hebx/image/upload/c_crop,w_1.0,h_0.58,y_0.28/f_webp,q_auto:good/v1779118088/10_exbbyr.jpg',
+    'https://res.cloudinary.com/dsr72hebx/image/upload/c_crop,w_1.0,h_0.58,y_0.28/f_webp,q_auto:good/v1779118104/18_wgfrlb.jpg',
+    'https://res.cloudinary.com/dsr72hebx/image/upload/c_crop,w_1.0,h_0.58,y_0.28/f_webp,q_auto:good/v1779118114/21_ka4ztq.jpg',
+    'https://res.cloudinary.com/dsr72hebx/image/upload/c_crop,w_1.0,h_0.58,y_0.28/f_webp,q_auto:good/v1779118086/11_igk6jw.jpg',
+    'https://res.cloudinary.com/dsr72hebx/image/upload/c_crop,w_1.0,h_0.58,y_0.28/f_webp,q_auto:good/v1779117781/6_kv9ity.jpg',
+    'https://res.cloudinary.com/dsr72hebx/image/upload/c_crop,w_1.0,h_0.58,y_0.28/f_webp,q_auto:good/v1779118108/19_dcyfi5.jpg',
+    'https://res.cloudinary.com/dsr72hebx/image/upload/c_crop,w_1.0,h_0.58,y_0.28/f_webp,q_auto:good/v1779118107/17_uq2h4u.jpg',
+    'https://res.cloudinary.com/dsr72hebx/image/upload/c_crop,w_1.0,h_0.58,y_0.28/f_webp,q_auto:good/v1779118108/15_kiaqpx.jpg',
+  ];
 
-  if (!images || images.length === 0) {
-    return (
-      <section className="py-24 bg-gray-50 flex items-center justify-center min-h-[400px]">
-        <h2 className="text-2xl font-bold text-gray-400">لا يوجد صور لعرضها في السلايدر. تأكد من الرفع.</h2>
-      </section>
-    );
-  }
-
-  const scrollLeft = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -400, behavior: 'smooth' });
+  const handleScroll = (direction: 'next' | 'prev'): void => {
+    if (!scrollContainerRef.current) return;
+    const scrollAmount = scrollContainerRef.current.clientWidth * 0.8;
+    const isRtl = document.dir === 'rtl' || locale === 'ar';
+    
+    // In RTL scroll, negative left scrolls forward, positive scrolls back (in some browsers)
+    // Or vice versa. Let's make it intuitive and robust by checking direction
+    let scrollOffset = direction === 'next' ? scrollAmount : -scrollAmount;
+    if (isRtl) {
+      scrollOffset = -scrollOffset;
     }
-  };
 
-  const scrollRight = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 400, behavior: 'smooth' });
-    }
-  };
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    isDown.current = true;
-    dragDistance.current = 0;
-    if (scrollRef.current) {
-      scrollRef.current.classList.remove('snap-x', 'snap-mandatory', 'scroll-smooth');
-      scrollRef.current.style.cursor = 'grabbing';
-      startX.current = e.pageX - scrollRef.current.offsetLeft;
-      scrollLeftPos.current = scrollRef.current.scrollLeft;
-    }
-  };
-
-  const handleMouseLeaveOrUp = () => {
-    isDown.current = false;
-    if (scrollRef.current) {
-      scrollRef.current.classList.add('snap-x', 'snap-mandatory', 'scroll-smooth');
-      scrollRef.current.style.cursor = 'grab';
-    }
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDown.current || !scrollRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX.current) * 2; 
-    dragDistance.current += Math.abs(x - startX.current);
-    scrollRef.current.scrollLeft = scrollLeftPos.current - walk;
-  };
-
-  const handleImageClick = (url: string) => {
-    // Only open if the user didn't drag
-    if (dragDistance.current < 10) {
-      setLightboxImage(url);
-    }
+    scrollContainerRef.current.scrollBy({
+      left: scrollOffset,
+      behavior: 'smooth',
+    });
   };
 
   return (
-    <div className="w-full bg-white py-16 relative group">
+    <div className="w-full bg-white py-16 relative group" id="before-after-section">
       <div className="max-w-7xl mx-auto px-4 mb-12 text-center">
         <h2 className="text-3xl md:text-5xl font-black text-brand-navy mb-4 leading-tight">
-          سابقة الأعمال (قبل وبعد)
+          {locale === 'ar' ? 'سابقة الأعمال (قبل وبعد)' : 'Our Work (Before & After)'}
         </h2>
       </div>
 
-      {/* Navigation Arrows */}
-      <button 
-        onClick={scrollRight}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-primary rounded-full p-3 shadow-lg backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 disabled:opacity-0"
+      <button
+        onClick={(): void => handleScroll('next')}
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-brand-navy rounded-full p-3 shadow-lg backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 disabled:opacity-0"
         aria-label="Next image"
       >
-        <FiChevronRight size={28} />
+        <svg
+          stroke="currentColor"
+          fill="none"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          height="28"
+          width="28"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
       </button>
-      
-      <button 
-        onClick={scrollLeft}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-primary rounded-full p-3 shadow-lg backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 disabled:opacity-0"
+
+      <button
+        onClick={(): void => handleScroll('prev')}
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-brand-navy rounded-full p-3 shadow-lg backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 disabled:opacity-0"
         aria-label="Previous image"
       >
-        <FiChevronLeft size={28} />
+        <svg
+          stroke="currentColor"
+          fill="none"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          height="28"
+          width="28"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
       </button>
 
-      {/* Scrollable Container */}
-      <div 
-        ref={scrollRef}
-        onMouseDown={handleMouseDown}
-        onMouseLeave={handleMouseLeaveOrUp}
-        onMouseUp={handleMouseLeaveOrUp}
-        onMouseMove={handleMouseMove}
-        className="flex w-full overflow-x-auto snap-x snap-mandatory gap-4 px-4 pb-4 hide-scrollbar scroll-smooth cursor-grab select-none"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      <div
+        ref={scrollContainerRef}
+        className="flex w-full overflow-x-auto gap-4 px-4 pb-4 hide-scrollbar cursor-grab select-none snap-x snap-mandatory scroll-smooth"
+        style={{ scrollbarWidth: 'none', cursor: 'grab' }}
       >
-        {images.map((img, index) => {
-          // Use Cloudinary crop to remove the header (top 28%) and footer (bottom 14%)
-          // Leaving exactly the 58% middle portion containing the before/after photos
-          const croppedUrl = img.imageUrl.replace('/upload/', '/upload/c_crop,w_1.0,h_0.58,y_0.28/');
-          // Compress images on the fly to improve performance for slider
-          const sliderOptimizedUrl = croppedUrl.replace('q_100', 'q_auto:good').replace('q_auto', 'q_auto:good');
-          
-          return (
-            <div 
-              key={`img-${img.id}-${index}`} 
-              className="snap-center shrink-0 cursor-pointer"
-              onClick={() => handleImageClick(croppedUrl.replace('q_auto', 'q_100'))}
-            >
-              <img 
-                src={sliderOptimizedUrl} 
-                alt="Before After" 
-                loading="lazy"
-                onDragStart={(e) => e.preventDefault()}
-                className="h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] w-auto aspect-square object-contain rounded-2xl shadow-sm border border-gray-100 transition-transform duration-500 hover:scale-[1.01] pointer-events-none"
-              />
-            </div>
-          );
-        })}
+        {images.map((src, idx) => (
+          <div key={idx} className="snap-center shrink-0 cursor-pointer">
+            <img
+              src={src}
+              alt={`Before After ${idx + 1}`}
+              loading="lazy"
+              className="h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] w-auto aspect-square object-contain rounded-2xl shadow-sm border border-gray-100 transition-transform duration-500 hover:scale-[1.01] pointer-events-none"
+            />
+          </div>
+        ))}
       </div>
 
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style jsx global>{`
         .hide-scrollbar::-webkit-scrollbar {
           display: none;
         }
-      `}} />
-
-      {/* Lightbox Modal */}
-      {lightboxImage && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
-          onClick={() => setLightboxImage(null)}
-        >
-          <button 
-            className="absolute top-6 right-6 text-white hover:text-gray-300 transition-colors z-[60]"
-            onClick={() => setLightboxImage(null)}
-          >
-            <FiX size={40} />
-          </button>
-          <img 
-            src={lightboxImage} 
-            alt="Enlarged Before After" 
-            className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          />
-        </div>
-      )}
+      `}</style>
     </div>
   );
 }

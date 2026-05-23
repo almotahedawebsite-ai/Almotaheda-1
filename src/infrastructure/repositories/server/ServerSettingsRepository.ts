@@ -52,7 +52,9 @@ export class ServerSettingsRepository extends ServerBaseRepository<SiteSettings>
           pagesSeo: {},
           enableDarkMode: false,
           enableMultiLanguage: false,
-          defaultLocale: 'ar'
+          defaultLocale: 'ar',
+          facadeCleaningTitle: { ar: 'بعض اعمالنا من نظافة الواجهات', en: 'Some of our work in facade cleaning' },
+          facadeCleaningImages: []
         } as SiteSettings;
       },
       ['global-settings-v2'],

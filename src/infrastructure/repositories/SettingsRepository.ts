@@ -50,7 +50,9 @@ export class SettingsRepository extends BaseRepository<SiteSettings> {
       pagesSeo: {},
       enableDarkMode: false,
       enableMultiLanguage: false,
-      defaultLocale: 'ar'
+      defaultLocale: 'ar',
+      facadeCleaningTitle: { ar: 'بعض اعمالنا من نظافة الواجهات', en: 'Some of our work in facade cleaning' },
+      facadeCleaningImages: []
     };
   }
 
@@ -95,7 +97,9 @@ export class SettingsRepository extends BaseRepository<SiteSettings> {
         pagesSeo: data.pagesSeo || {},
         enableDarkMode: data.enableDarkMode ?? false,
         enableMultiLanguage: data.enableMultiLanguage ?? false,
-        defaultLocale: data.defaultLocale || 'ar'
+        defaultLocale: data.defaultLocale || 'ar',
+        facadeCleaningTitle: data.facadeCleaningTitle || { ar: 'بعض اعمالنا من نظافة الواجهات', en: 'Some of our work in facade cleaning' },
+        facadeCleaningImages: data.facadeCleaningImages || []
       });
     }
   }

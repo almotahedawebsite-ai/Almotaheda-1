@@ -69,4 +69,8 @@ export interface SiteSettings {
 
   // Most Requested Places
   topRequestedPlaces?: { ar: string; en: string; category?: string }[];
+
+  // Facade Cleaning Works Section
+  facadeCleaningTitle?: TranslatableString;
+  facadeCleaningImages?: string[];
 }

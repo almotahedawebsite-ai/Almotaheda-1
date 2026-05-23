@@ -2,7 +2,6 @@ import { ServerSettingsRepository } from '@/infrastructure/repositories/server/S
 import { ServerServiceRepository } from '@/infrastructure/repositories/server/ServerServiceRepository';
 import { ServerKeyClientRepository } from '@/infrastructure/repositories/server/ServerKeyClientRepository';
 import { ServerBranchRepository } from '@/infrastructure/repositories/server/ServerBranchRepository';
-import { ServerBeforeAfterRepository } from '@/infrastructure/repositories/server/ServerBeforeAfterRepository';
 
 import HeroSection from '@/presentation/components/Home/HeroSection';
 import IntroSection from '@/presentation/components/Home/IntroSection';
@@ -15,7 +14,9 @@ import ConsultationSection from '@/presentation/components/Home/ConsultationSect
 import ContactSection from '@/presentation/components/Home/ContactSection';
 import ContactInfoSection from '@/presentation/components/Home/ContactInfoSection';
 import SocialMediaSection from '@/presentation/components/Home/SocialMediaSection';
+
 import BeforeAfterSection from '@/presentation/components/Home/BeforeAfterSection';
+import FacadeCleaningSection from '@/presentation/components/Home/FacadeCleaningSection';
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -23,28 +24,26 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const serviceRepo = new ServerServiceRepository();
   const clientRepo = new ServerKeyClientRepository();
   const branchRepo = new ServerBranchRepository();
-  const beforeAfterRepo = new ServerBeforeAfterRepository();
 
-  const [settings, services, clients, branches, allBeforeAfter] = await Promise.all([
-    settingsRepo.getGlobalSettings(),
-    serviceRepo.getActive(),
-    clientRepo.getActive(),
-    branchRepo.getActive(),
-    beforeAfterRepo.getActive()
+  console.log('--- STARTING HOMEPAGE FETCHES ---');
+  const [settings, services, clients, branches] = await Promise.all([
+    settingsRepo.getGlobalSettings().then(r => { console.log('✓ Settings fetch complete'); return r; }),
+    serviceRepo.getActive().then(r => { console.log('✓ Services fetch complete'); return r; }),
+    clientRepo.getActive().then(r => { console.log('✓ Clients fetch complete'); return r; }),
+    branchRepo.getActive().then(r => { console.log('✓ Branches fetch complete'); return r; })
   ]);
-
-  // Shuffle and allow up to 50 images since we have lazy loading
-  const shuffledBeforeAfter = [...allBeforeAfter].sort(() => 0.5 - Math.random()).slice(0, 50);
+  console.log('--- ALL FETCHES COMPLETE ---');
 
   return (
     <div>
       <HeroSection settings={settings} locale={locale} servicesCount={services.length} />
       <IntroSection locale={locale} />
-      <BeforeAfterSection images={shuffledBeforeAfter} />
       <ServicesSection services={services} locale={locale} />
       <LaborSupplySection locale={locale} />
       <KeyClientsSection clients={clients} locale={locale} settings={settings} />
       <WhyUsSection locale={locale} />
+      <BeforeAfterSection locale={locale} />
+      <FacadeCleaningSection settings={settings} locale={locale} />
       <BranchesSection branches={branches} locale={locale} />
       <SocialMediaSection settings={settings} locale={locale} />
       <ContactSection locale={locale} />

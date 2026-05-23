@@ -2,6 +2,7 @@ import React from 'react';
 import { TranslatableField } from '@/presentation/components/Dashboard/TranslatableField';
 import { TranslatableString } from '@/domain/types/settings';
 import { FiImage, FiSearch, FiInfo, FiSettings, FiChevronDown, FiAlertTriangle, FiBriefcase, FiPlus, FiTrash2, FiHome } from 'react-icons/fi';
+import { CloudinaryService } from '@/infrastructure/services/CloudinaryService';
 
 export default function GlobalSettingsTab({
   settings,
@@ -12,6 +13,38 @@ export default function GlobalSettingsTab({
   setSettings: React.Dispatch<React.SetStateAction<any>>;
   uploadImage: (e: React.ChangeEvent<HTMLInputElement>, field: 'faviconUrl' | 'metaGraphImage') => Promise<void>;
 }) {
+  const handleAddImage = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    try {
+      const urls: string[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (file) {
+          const url = await CloudinaryService.uploadImage(file);
+          urls.push(url);
+        }
+      }
+      const currentImages = settings.facadeCleaningImages || [];
+      setSettings({
+        ...settings,
+        facadeCleaningImages: [...currentImages, ...urls]
+      });
+      alert('تم رفع الصور بنجاح!');
+    } catch (error) {
+      console.error(error);
+      alert('فشل في رفع بعض الصور');
+    }
+  };
+
+  const handleRemoveImage = (indexToRemove: number): void => {
+    const currentImages = settings.facadeCleaningImages || [];
+    setSettings({
+      ...settings,
+      facadeCleaningImages: currentImages.filter((_: string, idx: number) => idx !== indexToRemove)
+    });
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
       {/* Visual Identity */}
@@ -235,6 +268,62 @@ export default function GlobalSettingsTab({
           ))}
           {(settings.topRequestedPlaces ?? []).length === 0 && (
             <p className="text-gray-400 text-center py-6 text-sm">لا توجد أماكن مضافة — اضغط "إضافة مكان جديد"</p>
+          )}
+        </div>
+      </section>
+
+      {/* ── Facade Cleaning Showcase Section ── */}
+      <section className="md:col-span-2 bg-white p-8 rounded-3xl shadow-sm border border-gray-100 space-y-6">
+        <h2 className="text-xl font-black flex items-center gap-2">
+          <FiImage className="text-brand-teal" /> قسم أعمالنا (نظافة الواجهات)
+        </h2>
+        
+        <TranslatableField 
+          label="عنوان قسم أعمالنا (Title)"
+          value={settings.facadeCleaningTitle || ''}
+          onChange={(val: TranslatableString) => setSettings({...settings, facadeCleaningTitle: val})}
+          enableMultiLanguage={!!settings.enableMultiLanguage}
+          placeholder="بعض اعمالنا من نظافة الواجهات"
+        />
+
+        <div>
+          <label className="block text-sm font-bold text-gray-700 mb-4">الصور المعروضة في القسم</label>
+          
+          {/* Images Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6">
+            {(settings.facadeCleaningImages || []).map((src: string, idx: number) => (
+              <div key={idx} className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-gray-100 group shadow-sm">
+                <img src={src} alt={`Facade cleaning work ${idx + 1}`} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <button 
+                    type="button"
+                    onClick={(): void => handleRemoveImage(idx)}
+                    className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-xl transition-colors font-bold text-sm flex items-center gap-1 shadow-md"
+                  >
+                    <FiTrash2 /> حذف
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            {/* Upload Area inside grid */}
+            <div className="relative aspect-[4/3] flex flex-col items-center justify-center border-2 border-dashed border-gray-200 hover:border-brand-teal hover:bg-brand-teal/[0.02] rounded-2xl transition-all cursor-pointer group text-center px-2">
+              <input 
+                type="file" 
+                multiple 
+                accept="image/*" 
+                onChange={handleAddImage}
+                className="absolute inset-0 opacity-0 cursor-pointer z-10" 
+              />
+              <FiPlus className="text-3xl text-gray-400 group-hover:text-brand-teal group-hover:scale-110 transition-all" />
+              <span className="text-xs font-bold text-gray-500 mt-2 group-hover:text-brand-teal">رفع صور</span>
+            </div>
+          </div>
+          
+          {(settings.facadeCleaningImages || []).length === 0 && (
+            <p className="text-gray-400 text-sm mt-2 text-center py-4 border border-dashed rounded-2xl bg-gray-50">
+              لا توجد صور مخصصة حالياً — سيتم استخدام الصور الافتراضية للموقع. يرجى الضغط على زر رفع الصور لإضافة أعمالك.
+            </p>
           )}
         </div>
       </section>
