@@ -14,12 +14,13 @@
 /build
 /dist
 
-# Environment Variables (CRITICAL: Do not commit secrets)
+# Environment Variables
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env*.local
 *.local
 
 # Firebase
@@ -28,6 +29,9 @@
 firebase-debug.log*
 firestore-debug.log*
 ui-debug.log*
+
+# Vercel
+.vercel
 
 # Misc
 .DS_Store
@@ -43,10 +47,23 @@ yarn-error.log*
 *.sln
 *.sw?
 
-# Antigravity specific
+# Antigravity / AI tools
 .antigravity/
 .gemini/
 
-.vercel
-.env*.local
-vscode.deb
+# Large binary files (should never be committed)
+*.deb
+*.exe
+*.dmg
+*.iso
+*.zip
+*.tar.gz
+*.rar
+*.7z
+*.apk
+*.pkg
+
+# Temporary files
+tmp_*.json
+*.tmp
+*.log
