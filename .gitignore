@@ -49,3 +49,4 @@ yarn-error.log*
 
 .vercel
 .env*.local
+vscode.deb

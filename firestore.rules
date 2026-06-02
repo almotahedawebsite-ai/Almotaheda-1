@@ -8,8 +8,8 @@ service cloud.firestore {
 
     function isAdmin() {
       return request.auth != null && (
-        request.auth.token.email == 'gemeslaim10@gmail.com' ||
         request.auth.token.email == 'almotahedawebsite@gmail.com' ||
+        request.auth.token.email == 'nabhany444@gmail.com' ||
         exists(/databases/$(database)/documents/admins/$(request.auth.token.email))
       );
     }
@@ -69,7 +69,7 @@ service cloud.firestore {
     }
     match /admins/{emailId} {
       allow read: if isAdmin() || (request.auth != null && request.auth.token.email == emailId);
-      allow write: if isAdmin() || (request.auth != null && request.auth.token.email == 'gemeslaim10@gmail.com');
+      allow write: if isAdmin();
     }
     match /clients/{uid} {
       allow create: if true;

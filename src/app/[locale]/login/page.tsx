@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { auth, db } from '@/infrastructure/firebase/config';
-import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { isSuperAdminEmail } from '@/app/actions/auth';
@@ -25,49 +25,70 @@ export default function LoginPage() {
 
   const redirectingRef = React.useRef(false);
 
+  // Helper to get current locale from pathname
+  const getCurrentLocale = () => {
+    if (typeof window === 'undefined') return 'ar';
+    return window.location.pathname.split('/')[1] || 'ar';
+  };
+
+  // Helper: complete sign-in for a given Firebase user (used by both popup & redirect flows)
+  const completeSignIn = async (user: import('firebase/auth').User) => {
+    if (redirectingRef.current) return;
+    const errorParam = new URLSearchParams(window.location.search).get('error');
+    if (errorParam) { setChecking(false); return; }
+
+    try {
+      redirectingRef.current = true;
+      const idToken = await user.getIdToken();
+      const sessionRes = await fetch('/api/auth/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken })
+      });
+
+      if (!sessionRes.ok) {
+        const errorData = await sessionRes.json().catch(() => ({}));
+        console.error('Server session not created:', errorData);
+        await auth.signOut();
+        setError(`فشل تسجيل الدخول من الخادم: ${errorData.details || 'تأكد من إعدادات Firebase Admin'}`);
+        redirectingRef.current = false;
+        setChecking(false);
+        return;
+      }
+
+      const email = user.email || '';
+      const isSuper = await isSuperAdminEmail(email);
+      const isAdmin = isSuper || (await getDoc(doc(db, 'admins', email))).exists();
+      const currentLocale = getCurrentLocale();
+      router.replace(isAdmin ? `/${currentLocale}/dashboard` : `/${currentLocale}/profile`);
+    } catch (error) {
+      console.error('Session sync error:', error);
+      redirectingRef.current = false;
+      setChecking(false);
+    }
+  };
+
+  // Handle result coming back from signInWithRedirect
+  useEffect(() => {
+    getRedirectResult(auth)
+      .then(async (result) => {
+        if (result?.user) {
+          setLoading(true);
+          await completeSignIn(result.user);
+        }
+      })
+      .catch((err) => {
+        console.error('Redirect result error:', err);
+        setError('حدث خطأ أثناء تسجيل الدخول. حاول مرة أخرى.');
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // If already logged in, redirect accordingly
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        if (redirectingRef.current) return;
-
-        const errorParam = new URLSearchParams(window.location.search).get('error');
-        if (errorParam) {
-          setChecking(false);
-          return;
-        }
-
-        try {
-          redirectingRef.current = true;
-
-          const idToken = await user.getIdToken();
-          const sessionRes = await fetch('/api/auth/session', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ idToken })
-          });
-
-          if (!sessionRes.ok) {
-            const errorData = await sessionRes.json().catch(() => ({}));
-            console.error('Server session not created:', errorData);
-            await auth.signOut();
-            setError(`فشل تسجيل الدخول من الخادم: ${errorData.details || 'تأكد من إعدادات Firebase Admin'}`);
-            redirectingRef.current = false;
-            setChecking(false);
-            return;
-          }
-
-          const email = user.email || '';
-          const isSuper = await isSuperAdminEmail(email);
-          const isAdmin = isSuper || (await getDoc(doc(db, 'admins', email))).exists();
-          const currentLocale = window.location.pathname.split('/')[1] || 'ar';
-
-          router.replace(isAdmin ? `/${currentLocale}/dashboard` : `/${currentLocale}/profile`);
-        } catch (error) {
-          console.error('Session sync error:', error);
-          redirectingRef.current = false;
-          setChecking(false);
-        }
+        await completeSignIn(user);
       } else {
         setChecking(false);
       }
@@ -76,9 +97,10 @@ export default function LoginPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Show unauthorized error from dashboard redirect
+  // Show error messages from URL params
   useEffect(() => {
-    if (searchParams.get('error') === 'unauthorized') {
+    const errorParam = searchParams.get('error');
+    if (errorParam === 'unauthorized') {
       setError('ليس لديك صلاحية الوصول للداشبورد.');
     }
   }, [searchParams]);
@@ -88,45 +110,51 @@ export default function LoginPage() {
     setError('');
     try {
       const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      const email = user.email || '';
+      try {
+        // Try popup first (better UX)
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        const email = user.email || '';
 
-      // Detect role automatically
-      const isSuperAdminEnv = await isSuperAdminEmail(email);
-      const adminDoc = isSuperAdminEnv ? null : await getDoc(doc(db, 'admins', email));
-      const isAdmin = isSuperAdminEnv || adminDoc?.exists();
+        const isSuperAdminEnv = await isSuperAdminEmail(email);
+        const adminDoc = isSuperAdminEnv ? null : await getDoc(doc(db, 'admins', email));
+        const isAdmin = isSuperAdminEnv || adminDoc?.exists();
 
-      // Create server session
-      const idToken = await user.getIdToken();
-      const sessionRes = await fetch('/api/auth/session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken })
-      });
+        const idToken = await user.getIdToken();
+        const sessionRes = await fetch('/api/auth/session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ idToken })
+        });
 
-      if (!sessionRes.ok) {
-        throw new Error('Failed to create server session');
+        if (!sessionRes.ok) throw new Error('Failed to create server session');
+
+        const currentLocale = getCurrentLocale();
+
+        if (!isAdmin) {
+          await setDoc(doc(db, 'clients', user.uid), {
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName || '',
+            photoURL: user.photoURL || '',
+            lastLogin: new Date().toISOString(),
+            createdAt: new Date().toISOString(),
+          }, { merge: true });
+        }
+
+        router.push(isAdmin ? `/${currentLocale}/dashboard` : `/${currentLocale}/profile`);
+      } catch (popupErr: any) {
+        // Popup was blocked or unavailable → fall back to redirect
+        if (
+          popupErr?.code === 'auth/popup-blocked' ||
+          popupErr?.code === 'auth/popup-closed-by-user'
+        ) {
+          await signInWithRedirect(auth, provider);
+          // Page will reload; result handled by getRedirectResult above
+          return;
+        }
+        throw popupErr;
       }
-
-      const currentLocale = window.location.pathname.split('/')[1] || 'ar';
-
-      if (isAdmin) {
-        router.push(`/${currentLocale}/dashboard`);
-        return;
-      }
-
-      // Save client profile to Firestore
-      await setDoc(doc(db, 'clients', user.uid), {
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName || '',
-        photoURL: user.photoURL || '',
-        lastLogin: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-      }, { merge: true });
-
-      router.push(`/${currentLocale}/profile`);
     } catch (err: any) {
       setError('حدث خطأ أثناء تسجيل الدخول. حاول مرة أخرى.');
       console.error(err);
@@ -192,7 +220,7 @@ export default function LoginPage() {
           </button>
 
           <p className="text-center text-slate-500 text-xs leading-relaxed">
-            سيتم توجيه المشرفين إلى لوحة التحكم تلقائياً
+            الأدمن والمشرفون سيُوجَّهون تلقائياً للوحة التحكم · العملاء لصفحة ملفهم الشخصي
           </p>
         </div>
 
